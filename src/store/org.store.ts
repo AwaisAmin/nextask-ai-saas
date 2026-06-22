@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Organization } from "@/src/types/org";
+import { Organization } from "@/types/org";
 
 interface OrgState {
   activeOrg: Organization | null;
