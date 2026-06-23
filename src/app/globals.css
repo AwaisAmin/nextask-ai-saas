@@ -128,3 +128,161 @@
     @apply font-sans;
   }
 }
+
+/* ── NexTask design tokens ─────────────────────────────── */
+:root {
+  --primary: #7b61ff;
+  --primary-2: #9b86ff;
+  --primary-ink: #ffffff;
+
+  --ai-a: #ff8a4c;
+  --ai-b: #ffc56b;
+  --ai-glow:
+    0 0 0 1px rgba(255, 160, 90, 0.25),
+    0 10px 40px -8px rgba(255, 140, 76, 0.45);
+
+  --ok: #36c58e;
+  --warn: #f5b23e;
+  --danger: #ff5c66;
+  --info: #4ca6ff;
+
+  --p-critical: #ff5c66;
+  --p-high: #ff8a4c;
+  --p-medium: #f5b23e;
+  --p-low: #7e8595;
+
+  --r-mult: 1;
+  --r-xs: calc(6px * var(--r-mult));
+  --r-sm: calc(9px * var(--r-mult));
+  --r-md: calc(13px * var(--r-mult));
+  --r-lg: calc(18px * var(--r-mult));
+  --r-xl: calc(26px * var(--r-mult));
+  --r-pill: 999px;
+
+  --row-h: 36px;
+  --pad: 20px;
+  --gap: 14px;
+}
+
+[data-theme="dark"] {
+  --bg-0: #0a0a0f;
+  --bg-1: #101017;
+  --bg-2: #16161f;
+  --bg-3: #1e1e2a;
+  --bg-4: #262635;
+  --elev: #14141c;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-2: rgba(255, 255, 255, 0.12);
+  --text-0: #f3f3f7;
+  --text-1: #a6a6b6;
+  --text-2: #6e6e80;
+  --text-3: #4c4c5c;
+  --shadow-card:
+    0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --shadow-pop:
+    0 24px 60px -16px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --scrim: rgba(5, 5, 9, 0.66);
+  --primary-soft: color-mix(in oklab, var(--primary) 18%, transparent);
+  --primary-line: color-mix(in oklab, var(--primary) 42%, transparent);
+}
+
+[data-theme="light"] {
+  --bg-0: #f4f3f1;
+  --bg-1: #fbfaf9;
+  --bg-2: #ffffff;
+  --bg-3: #f1f0ed;
+  --bg-4: #e8e7e3;
+  --elev: #ffffff;
+  --border: rgba(20, 18, 30, 0.09);
+  --border-2: rgba(20, 18, 30, 0.16);
+  --text-0: #16151d;
+  --text-1: #57555f;
+  --text-2: #87858f;
+  --text-3: #b4b2ba;
+  --shadow-card:
+    0 1px 2px rgba(20, 18, 30, 0.04), 0 10px 24px -16px rgba(20, 18, 30, 0.22);
+  --shadow-pop:
+    0 30px 70px -20px rgba(20, 18, 30, 0.28), 0 0 0 1px rgba(20, 18, 30, 0.06);
+  --scrim: rgba(30, 28, 40, 0.32);
+  --primary-soft: color-mix(in oklab, var(--primary) 13%, transparent);
+  --primary-line: color-mix(in oklab, var(--primary) 38%, transparent);
+}
+
+/* scrollbars */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--border-2);
+  border-radius: 99px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--text-3);
+  background-clip: padding-box;
+}
+
+/* NexTask keyframes */
+@keyframes nx-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes nx-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes nx-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes nx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes nx-pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--ai-a) 40%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--ai-a) 0%, transparent);
+  }
+}
+
+.ai-grad {
+  background: linear-gradient(110deg, var(--ai-a), var(--ai-b));
+}
+.ai-text {
+  background: linear-gradient(110deg, var(--ai-a), var(--ai-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+  }
+}

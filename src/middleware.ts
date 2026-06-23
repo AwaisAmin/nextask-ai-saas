@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_ROUTES = ["/login", "/register", "/verify-email"];
+const PUBLIC_ROUTES = ["/", "/login", "/register", "/verify-email"];
 const PASSWORD_RESET_PREFIX = "/password-reset";
 const DEFAULT_LOGIN = "/login";
 const DEFAULT_DASHBOARD = "/";
