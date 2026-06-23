@@ -1,12 +1,4 @@
-const LOGOS = [
-  "Northwind",
-  "Loop",
-  "Vertex",
-  "Cascade",
-  "Monarch",
-  "Lumen",
-  "Forge",
-];
+import { LOGOS } from "@/constants/landing";
 
 export function LandingTrust() {
   return (

@@ -2,41 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-const CheckIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M5 12.5l4.5 4.5L19 7" />
-  </svg>
-);
-
-const FREE_FEATURES = [
-  "Up to 3 projects & 5 members",
-  "Boards, docs & chat",
-  "10 AI Agent actions / day",
-];
-
-const PRO_FEATURES = [
-  "Unlimited projects · 50 members",
-  "100 AI actions / day + automations",
-  "Roadmaps, analytics & integrations",
-  "Priority support",
-];
-
-const ENTERPRISE_FEATURES = [
-  "Everything in Pro, unlimited",
-  "SSO / SAML & SCIM",
-  "Audit logs, data residency, SLA",
-  "Dedicated success manager",
-];
+import { CheckIcon } from "@/icons";
+import {
+  ENTERPRISE_FEATURES,
+  FREE_FEATURES,
+  PRO_FEATURES,
+} from "@/constants/landing";
 
 export function LandingPricing() {
   const [yearly, setYearly] = useState(false);
@@ -84,7 +55,7 @@ export function LandingPricing() {
               {FREE_FEATURES.map((f) => (
                 <li key={f}>
                   <span className="ck">
-                    <CheckIcon />
+                    <CheckIcon size={16} />
                   </span>
                   {f}
                 </li>
@@ -110,7 +81,7 @@ export function LandingPricing() {
               {PRO_FEATURES.map((f) => (
                 <li key={f}>
                   <span className="ck">
-                    <CheckIcon />
+                    <CheckIcon size={16} />
                   </span>
                   {f}
                 </li>
@@ -125,7 +96,7 @@ export function LandingPricing() {
           <div className="price-card reveal d2">
             <h3>Enterprise</h3>
             <div className="desc">
-              For organizations that need scale & control.
+              For organizations that need scale &amp; control.
             </div>
             <div className="price-amt">
               <span className="amt">Custom</span>
@@ -134,7 +105,7 @@ export function LandingPricing() {
               {ENTERPRISE_FEATURES.map((f) => (
                 <li key={f}>
                   <span className="ck">
-                    <CheckIcon />
+                    <CheckIcon size={16} />
                   </span>
                   {f}
                 </li>

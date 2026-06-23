@@ -1,23 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { STATS } from "@/constants/landing";
 
-const STATS = [
-  { label: "Jira + Notion + Slack", display: "3 in 1", count: null },
-  { label: "Less time on busywork", display: "0%", count: 40, suffix: "%" },
-  {
-    label: "From signup to first task",
-    display: "0 min",
-    count: 2,
-    suffix: " min",
-  },
-  {
-    label: "Teams onboard & counting",
-    display: "0+",
-    count: 12000,
-    suffix: "+",
-  },
-];
+const DELAYS = ["", "d1", "d2", "d3"];
 
 function useCountUp(
   target: number | null,
@@ -80,8 +66,6 @@ function StatItem({
     </div>
   );
 }
-
-const DELAYS = ["", "d1", "d2", "d3"];
 
 export function LandingStats() {
   return (

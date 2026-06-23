@@ -2,67 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-
-const PROMPT = "Plan the website redesign sprint";
-
-const AI_CARDS = [
-  {
-    id: "WEB-61",
-    title: "Define hero messaging",
-    color: "#FF8A4C",
-    bars: [true, true, true],
-  },
-  {
-    id: "WEB-62",
-    title: "Build hero component",
-    color: "#4CA6FF",
-    bars: [true, true, false],
-  },
-  {
-    id: "WEB-63",
-    title: "Compress media assets",
-    color: "#7B61FF",
-    bars: [true, true, false],
-  },
-] as const;
-
-type AiCard = (typeof AI_CARDS)[number];
-
-const STEPS = [
-  "Reading project context",
-  "Checking team workload",
-  "Creating 3 tasks & assigning",
-];
-
-const CheckIcon = () => (
-  <svg
-    width="9"
-    height="9"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="3"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M5 12.5l4.5 4.5L19 7" />
-  </svg>
-);
-
-const SparkIcon = ({ size = 14 }: { size?: number }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" />
-  </svg>
-);
+import { ArrowRightIcon, CheckIcon, PlayIcon, SparkIcon } from "@/icons";
+import { AI_CARDS, PROMPT, STEPS, type AiCard } from "@/constants/landing";
 
 export function LandingHero() {
   const [cmdText, setCmdText] = useState("");
@@ -159,23 +100,10 @@ export function LandingHero() {
         <div className="hero-cta reveal in d2">
           <Link className="btn btn-primary btn-lg" href="/register">
             Start free
-            <svg
-              width="17"
-              height="17"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
+            <ArrowRightIcon size={17} />
           </Link>
           <Link className="btn btn-ghost btn-lg" href="#features">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
+            <PlayIcon size={16} />
             Watch the demo
           </Link>
         </div>
@@ -244,18 +172,11 @@ export function LandingHero() {
                         style={{ position: "relative" }}
                       >
                         <span className="ai-spark">
-                          <svg
-                            width="9"
-                            height="9"
-                            viewBox="0 0 24 24"
-                            fill="none"
+                          <SparkIcon
+                            size={9}
+                            strokeWidth={2.4}
                             stroke="#1a0e06"
-                            strokeWidth="2.4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" />
-                          </svg>
+                          />
                         </span>
                         <div className="id">{c.id}</div>
                         <div className="ttl">{c.title}</div>
@@ -345,18 +266,11 @@ export function LandingHero() {
                     </h5>
                     <div className="mini-card" style={{ position: "relative" }}>
                       <span className="ai-spark">
-                        <svg
-                          width="9"
-                          height="9"
-                          viewBox="0 0 24 24"
-                          fill="none"
+                        <SparkIcon
+                          size={9}
+                          strokeWidth={2.4}
                           stroke="#1a0e06"
-                          strokeWidth="2.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" />
-                        </svg>
+                        />
                       </span>
                       <div className="id">WEB-41</div>
                       <div className="ttl">Redesign homepage hero</div>
@@ -455,7 +369,7 @@ export function LandingHero() {
                       className={`mini-step${steps[i] ? " show" : ""}`}
                     >
                       <span className="ck">
-                        <CheckIcon />
+                        <CheckIcon size={9} strokeWidth={3} />
                       </span>
                       {step}
                     </div>

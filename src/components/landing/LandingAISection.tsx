@@ -2,12 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-
-const ROWS = [
-  { who: "Lena", color: "#4CA6FF", before: 92, after: 60, tag: "overloaded" },
-  { who: "Dev", color: "#F5B23E", before: 30, after: 58, tag: "has room" },
-  { who: "Omar", color: "#36C58E", before: 45, after: 49, tag: "" },
-];
+import { CheckIcon, SparkIcon } from "@/icons";
+import { AI_FEATURES, ROWS } from "@/constants/landing";
 
 export function LandingAISection() {
   const [animated, setAnimated] = useState(false);
@@ -39,18 +35,7 @@ export function LandingAISection() {
         <div className="split">
           <div className="split-copy reveal">
             <div className="eyebrow ai">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" />
-              </svg>
+              <SparkIcon size={14} />
               The AI Agent
             </div>
             <h2 className="h2">
@@ -63,24 +48,7 @@ export function LandingAISection() {
               exactly what changed.
             </p>
             <div className="feat-list">
-              {[
-                {
-                  icon: <rect x="3" y="4" width="18" height="16" rx="2" />,
-                  extra: <path d="M9 4v16M15 4v16" />,
-                  title: "Plans sprints for you",
-                  desc: '"Plan the next sprint" → tasks created, prioritized, assigned by skill and availability.',
-                },
-                {
-                  icon: <path d="M4 5h16v11H9l-4 3.5V16H4z" />,
-                  title: "Turns meetings into action",
-                  desc: "Paste notes → the agent extracts action items, owners and due dates automatically.",
-                },
-                {
-                  icon: <path d="M13 3 5 13h6l-1 8 8-10h-6z" />,
-                  title: "Keeps everyone unblocked",
-                  desc: "Daily standups, workload rebalancing, at-risk flags — delivered before you ask.",
-                },
-              ].map(({ icon, extra, title, desc }) => (
+              {AI_FEATURES.map(({ icon, extra, title, desc }) => (
                 <div key={title} className="feat-item">
                   <div className="feat-ic ai">
                     <svg
@@ -109,18 +77,7 @@ export function LandingAISection() {
               href="#features"
               style={{ marginTop: 30 }}
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" />
-              </svg>
+              <SparkIcon size={16} />
               See the agent in action
             </Link>
           </div>
@@ -156,18 +113,7 @@ export function LandingAISection() {
                     boxShadow: "var(--ai-glow)",
                   }}
                 >
-                  <svg
-                    width="17"
-                    height="17"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" />
-                  </svg>
+                  <SparkIcon size={17} />
                 </span>
                 <div>
                   <div
@@ -269,18 +215,7 @@ export function LandingAISection() {
                 }}
               >
                 <span style={{ color: "var(--ok)", display: "inline-flex" }}>
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 12.5l4.5 4.5L19 7" />
-                  </svg>
+                  <CheckIcon size={15} strokeWidth={2.4} />
                 </span>
                 Moved{" "}
                 <b style={{ color: "var(--text-0)", margin: "0 4px" }}>

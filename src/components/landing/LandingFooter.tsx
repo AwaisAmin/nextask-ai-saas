@@ -1,25 +1,5 @@
 import Link from "next/link";
-
-const LINKS = {
-  Product: [
-    { label: "Boards", href: "#features" },
-    { label: "Docs", href: "#features" },
-    { label: "AI Agent", href: "#ai" },
-    { label: "Pricing", href: "#pricing" },
-  ],
-  Company: [
-    { label: "About", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Blog", href: "#" },
-    { label: "Contact", href: "#" },
-  ],
-  Resources: [
-    { label: "Live demo", href: "#" },
-    { label: "Mobile app", href: "#" },
-    { label: "Docs", href: "#" },
-    { label: "Changelog", href: "#" },
-  ],
-};
+import { FOOTER_LINKS } from "@/constants/landing";
 
 export function LandingFooter() {
   return (
@@ -42,7 +22,7 @@ export function LandingFooter() {
               teammate.
             </p>
           </div>
-          {Object.entries(LINKS).map(([heading, items]) => (
+          {Object.entries(FOOTER_LINKS).map(([heading, items]) => (
             <div key={heading}>
               <h5>{heading}</h5>
               {items.map((item) => (
