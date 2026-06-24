@@ -1,7 +1,12 @@
 import apiClient from "@/lib/api/client";
 import type { ApiResponse } from "@/types/api";
 import type { User } from "@/types/user";
-import type { LoginInput, RegisterInput } from "../schemas";
+import type {
+  LoginInput,
+  RegisterInput,
+  PasswordResetRequestInput,
+  PasswordResetConfirmInput,
+} from "../schemas";
 
 export interface AuthData {
   user: User;
@@ -13,3 +18,15 @@ export const loginApi = (data: LoginInput) =>
 
 export const registerApi = (data: RegisterInput) =>
   apiClient.post<ApiResponse<{ user: User }>>("/api/v1/auth/register/", data);
+
+export const verifyEmailApi = (token: string) =>
+  apiClient.get<ApiResponse<null>>(`/api/v1/auth/verify-email/?token=${token}`);
+
+export const requestPasswordResetApi = (data: PasswordResetRequestInput) =>
+  apiClient.post<ApiResponse<null>>("/api/v1/auth/password-reset/", data);
+
+export const confirmPasswordResetApi = (data: PasswordResetConfirmInput) =>
+  apiClient.post<ApiResponse<null>>(
+    "/api/v1/auth/password-reset/confirm/",
+    data,
+  );

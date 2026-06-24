@@ -88,7 +88,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
                 <Input
                   label="Full name"
                   type="text"
-                  placeholder="Alex Rivera"
+                  placeholder="Your name"
                   autoComplete="name"
                   capitalize
                   error={errors.full_name?.message}
@@ -103,14 +103,24 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
                 error={errors.email?.message}
                 {...register("email")}
               />
-              <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                autoComplete={isSignup ? "new-password" : "current-password"}
-                error={errors.password?.message}
-                {...register("password")}
-              />
+              <div className="relative">
+                <Input
+                  label="Password"
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete={isSignup ? "new-password" : "current-password"}
+                  error={errors.password?.message}
+                  {...register("password")}
+                />
+                {!isSignup && (
+                  <Link
+                    href="/password-reset"
+                    className="absolute right-0 top-0 text-[12.5px] text-(--text-3) hover:text-(--text-1) transition-colors"
+                  >
+                    Forgot password?
+                  </Link>
+                )}
+              </div>
               {isSignup && (
                 <Input
                   label="Confirm password"
