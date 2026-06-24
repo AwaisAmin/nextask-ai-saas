@@ -40,7 +40,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
   const registerMutation = useRegister();
   const isPending = loginMutation.isPending || registerMutation.isPending;
 
-  async function onSubmit(values: FormValues) {
+  const onSubmit = async (values: FormValues) => {
     try {
       if (isSignup) {
         await registerMutation.mutateAsync(values as RegisterInput);
@@ -50,7 +50,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
     } catch (err) {
       handleApiError(err, setError);
     }
-  }
+  };
 
   return (
     <>

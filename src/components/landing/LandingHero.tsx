@@ -18,7 +18,7 @@ export const LandingHero = () => {
     let cancelled = false;
     const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
-    async function runDemo() {
+    const runDemo = async () => {
       while (!cancelled) {
         setCmdText("");
         setSteps([false, false, false]);
@@ -62,7 +62,7 @@ export const LandingHero = () => {
 
         await sleep(2600);
       }
-    }
+    };
 
     runDemo();
     return () => {
