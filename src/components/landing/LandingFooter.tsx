@@ -10,7 +10,7 @@ export function LandingFooter() {
             <Link className="lp-logo mb-3.5" href="#top">
               <span className="lp-logo-mark">N</span>NexTask
             </Link>
-            <p className="footer-desc">
+            <p className="text-sm text-(--text-2) leading-[1.6] max-w-70">
               One workspace for tasks, docs and chat — supercharged by an AI
               teammate.
             </p>

@@ -68,22 +68,22 @@ export function LandingAISection() {
 
           <div className="split-visual reveal d1">
             <div ref={cardRef} className="visual-card ai-vis-card">
-              <div className="ai-vis-header">
+              <div className="flex items-center gap-2.5 mb-4.5">
                 <span className="ai-vis-icon">
                   <SparkIcon size={17} />
                 </span>
                 <div>
                   <div className="ai-vis-label">AI AGENT</div>
-                  <div className="ai-vis-sub">
+                  <div className="text-[13px] text-(--text-1)">
                     Rebalance this sprint&apos;s workload
                   </div>
                 </div>
               </div>
 
               {ROWS.map((r) => (
-                <div key={r.who} className="ai-vis-row">
-                  <div className="ai-vis-row-head">
-                    <span className="ai-vis-who">
+                <div key={r.who} className="mb-3.5">
+                  <div className="flex items-center justify-between mb-1.5 text-[12.5px]">
+                    <span className="flex items-center gap-2">
                       {/* r.color is data-driven — must stay inline */}
                       <span
                         className="size-5 rounded-full shrink-0"
@@ -99,7 +99,7 @@ export function LandingAISection() {
                       </span>
                     )}
                   </div>
-                  <div className="ai-vis-track">
+                  <div className="h-1.75 rounded-full bg-(--bg-4) overflow-hidden">
                     {/* width and background are animated/data-driven — must stay inline */}
                     <div
                       className="ai-vis-fill"

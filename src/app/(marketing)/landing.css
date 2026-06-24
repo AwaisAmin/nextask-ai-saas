@@ -721,10 +721,6 @@ body.lp-body {
 
   /* ── Footer extras ────────────────────────────────────────────────────────── */
 
-  .footer-desc {
-    @apply text-sm text-(--text-2) leading-[1.6] max-w-70;
-  }
-
   .footer-legal {
     @apply flex gap-4.5;
     & a {
@@ -743,10 +739,6 @@ body.lp-body {
     );
   }
 
-  .ai-vis-header {
-    @apply flex items-center gap-2.5 mb-4.5;
-  }
-
   .ai-vis-icon {
     @apply size-8 rounded-[9px] grid place-items-center text-[#1a0e06] shrink-0;
     background: linear-gradient(120deg, var(--ai-a), var(--ai-b));
@@ -758,22 +750,6 @@ body.lp-body {
     background-image: linear-gradient(110deg, var(--ai-a), var(--ai-b));
   }
 
-  .ai-vis-sub {
-    @apply text-[13px] text-(--text-1);
-  }
-
-  .ai-vis-row {
-    @apply mb-3.5;
-  }
-
-  .ai-vis-row-head {
-    @apply flex items-center justify-between mb-1.5 text-[12.5px];
-  }
-
-  .ai-vis-who {
-    @apply flex items-center gap-2;
-  }
-
   .ai-vis-tag {
     @apply text-[10.5px] font-bold;
     &.danger {
@@ -782,10 +758,6 @@ body.lp-body {
     &.ok {
       @apply text-(--ok);
     }
-  }
-
-  .ai-vis-track {
-    @apply h-1.75 rounded-full bg-(--bg-4) overflow-hidden;
   }
 
   .ai-vis-fill {
