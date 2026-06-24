@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, CheckIcon, PlayIcon, SparkIcon } from "@/icons";
 import { AI_CARDS, PROMPT, STEPS, type AiCard } from "@/constants/landing";
 
-export function LandingHero() {
+export const LandingHero = () => {
   const [cmdText, setCmdText] = useState("");
   const [steps, setSteps] = useState([false, false, false]);
   const [cmdOpacity, setCmdOpacity] = useState(1);
@@ -317,4 +317,4 @@ export function LandingHero() {
       </div>
     </header>
   );
-}
+};

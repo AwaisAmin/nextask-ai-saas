@@ -3,7 +3,7 @@ import { STATS } from "@/constants/landing";
 
 type Stat = (typeof STATS)[number];
 
-export function StatItem({ stat }: { stat: Stat }) {
+export const StatItem = ({ stat }: { stat: Stat }) => {
   const { ref, value } = useCountUp(stat.count, stat.suffix ?? "");
 
   return (
@@ -14,4 +14,4 @@ export function StatItem({ stat }: { stat: Stat }) {
       <div className="lbl">{stat.label}</div>
     </div>
   );
-}
+};

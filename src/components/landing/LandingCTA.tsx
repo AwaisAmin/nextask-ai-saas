@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@/icons";
 
-export function LandingCTA() {
+export const LandingCTA = () => {
   return (
     <section className="section pt-5">
       <div className="wrap">
@@ -30,4 +30,4 @@ export function LandingCTA() {
       </div>
     </section>
   );
-}
+};

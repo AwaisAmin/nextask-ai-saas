@@ -3,7 +3,7 @@
 import { STATS } from "@/constants/landing";
 import { StatItem } from "./StatItem";
 
-export function LandingStats() {
+export const LandingStats = () => {
   return (
     <section className="section py-15">
       <div className="wrap">
@@ -15,4 +15,4 @@ export function LandingStats() {
       </div>
     </section>
   );
-}
+};

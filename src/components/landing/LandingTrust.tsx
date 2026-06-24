@@ -1,6 +1,6 @@
 import { LOGOS } from "@/constants/landing";
 
-export function LandingTrust() {
+export const LandingTrust = () => {
   return (
     <section className="trust">
       <div className="wrap">
@@ -15,4 +15,4 @@ export function LandingTrust() {
       </div>
     </section>
   );
-}
+};

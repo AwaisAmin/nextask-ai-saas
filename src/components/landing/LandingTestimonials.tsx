@@ -1,6 +1,6 @@
 import { QUOTES } from "@/constants/landing";
 
-export function LandingTestimonials() {
+export const LandingTestimonials = () => {
   return (
     <section className="section pt-10">
       <div className="wrap">
@@ -30,4 +30,4 @@ export function LandingTestimonials() {
       </div>
     </section>
   );
-}
+};

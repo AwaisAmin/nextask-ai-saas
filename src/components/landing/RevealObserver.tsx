@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-export function RevealObserver() {
+export const RevealObserver = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -24,4 +24,4 @@ export function RevealObserver() {
   }, []);
 
   return null;
-}
+};

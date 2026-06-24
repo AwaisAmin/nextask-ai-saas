@@ -4,7 +4,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { loginApi, registerApi } from "../api";
 import type { LoginInput, RegisterInput } from "../schemas";
 
-export function useLogin() {
+export const useLogin = () => {
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
 
@@ -17,9 +17,9 @@ export function useLogin() {
       }
     },
   });
-}
+};
 
-export function useRegister() {
+export const useRegister = () => {
   const router = useRouter();
 
   return useMutation({
@@ -30,4 +30,4 @@ export function useRegister() {
       }
     },
   });
-}
+};

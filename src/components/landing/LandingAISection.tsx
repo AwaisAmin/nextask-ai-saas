@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CheckIcon, OutlineIcon, SparkIcon } from "@/icons";
 import { AI_FEATURES, ROWS } from "@/constants/landing";
 
-export function LandingAISection() {
+export const LandingAISection = () => {
   const [animated, setAnimated] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -132,4 +132,4 @@ export function LandingAISection() {
       </div>
     </section>
   );
-}
+};

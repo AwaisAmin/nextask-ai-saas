@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { NAV_LINKS } from "@/constants/landing";
 
-export function LandingNav() {
+export const LandingNav = () => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -38,4 +38,4 @@ export function LandingNav() {
       </div>
     </nav>
   );
-}
+};

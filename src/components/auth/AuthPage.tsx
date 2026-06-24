@@ -23,7 +23,7 @@ type FormValues = {
   confirm_password?: string;
 };
 
-export function AuthPage({ mode }: { mode: Mode }) {
+export const AuthPage = ({ mode }: { mode: Mode }) => {
   const isSignup = mode === "signup";
   const content = AUTH_CONTENT[mode];
 
@@ -90,6 +90,7 @@ export function AuthPage({ mode }: { mode: Mode }) {
                   type="text"
                   placeholder="Alex Rivera"
                   autoComplete="name"
+                  capitalize
                   error={errors.full_name?.message}
                   {...register("full_name")}
                 />
@@ -146,4 +147,4 @@ export function AuthPage({ mode }: { mode: Mode }) {
       <AuthLoader visible={isPending} />
     </>
   );
-}
+};

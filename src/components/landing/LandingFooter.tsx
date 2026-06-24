@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FOOTER_LINKS } from "@/constants/landing";
 
-export function LandingFooter() {
+export const LandingFooter = () => {
   return (
     <footer className="footer">
       <div className="wrap">
@@ -37,4 +37,4 @@ export function LandingFooter() {
       </div>
     </footer>
   );
-}
+};

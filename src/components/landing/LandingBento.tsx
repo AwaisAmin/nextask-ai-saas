@@ -1,7 +1,7 @@
 import { OutlineIcon } from "@/icons";
 import { TILES } from "@/constants/landing";
 
-export function LandingBento() {
+export const LandingBento = () => {
   return (
     <section className="section pt-10" id="features">
       <div className="wrap">
@@ -30,4 +30,4 @@ export function LandingBento() {
       </div>
     </section>
   );
-}
+};

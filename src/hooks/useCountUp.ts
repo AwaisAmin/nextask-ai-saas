@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useCountUp(
+export const useCountUp = (
   target: number | null,
   suffix: string = "",
   duration = 1300,
-) {
+) => {
   const [value, setValue] = useState(target === null ? "" : `0${suffix}`);
   const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
@@ -41,4 +41,4 @@ export function useCountUp(
   }, [target, suffix, duration]);
 
   return { ref, value };
-}
+};

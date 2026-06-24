@@ -10,7 +10,7 @@ import {
   PRO_FEATURES,
 } from "@/constants/landing";
 
-export function LandingPricing() {
+export const LandingPricing = () => {
   const [yearly, setYearly] = useState(false);
 
   return (
@@ -132,4 +132,4 @@ export function LandingPricing() {
       </div>
     </section>
   );
-}
+};

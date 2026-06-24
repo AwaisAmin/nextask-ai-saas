@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SparkIcon } from "@/icons";
 
-export function AuthLeft() {
+export const AuthLeft = () => {
   return (
     <div className="auth-left">
       <div className="auth-glow a" />
@@ -45,4 +45,4 @@ export function AuthLeft() {
       </div>
     </div>
   );
-}
+};
