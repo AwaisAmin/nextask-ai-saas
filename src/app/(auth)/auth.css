@@ -68,26 +68,6 @@
     border: 1px solid color-mix(in oklab, var(--ai-a) 28%, transparent);
   }
 
-  /* ── Form field ──────────────────────────────────────────────────────────── */
-
-  .auth-field {
-    @apply mb-4;
-
-    & label {
-      @apply block text-[13px] font-semibold text-(--text-1) mb-1.75;
-    }
-
-    & input {
-      @apply w-full bg-(--bg-2) border border-(--border-2) rounded-[11px]
-             py-3.25 px-3.5 text-[14.5px] text-(--text-0) outline-none
-             transition-[border-color] duration-150 placeholder:text-(--text-3);
-
-      &:focus-visible {
-        border-color: var(--primary);
-      }
-    }
-  }
-
   /* ── Divider ─────────────────────────────────────────────────────────────── */
 
   .auth-divider {

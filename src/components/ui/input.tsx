@@ -1,18 +1,52 @@
-import * as React from "react";
+"use client";
 
+import * as React from "react";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+interface InputProps extends React.ComponentProps<"input"> {
+  label?: string;
+  error?: string;
+}
+
+function Input({ className, type, label, error, ...props }: InputProps) {
+  const [visible, setVisible] = useState(false);
+  const isPassword = type === "password";
+
   return (
-    <input
-      type={type}
-      data-slot="input"
-      className={cn(
-        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
-        className,
+    <div className={cn((label || error) && "mb-4")}>
+      {label && (
+        <label className="block text-[13px] font-semibold text-(--text-1) mb-1.75">
+          {label}
+        </label>
       )}
-      {...props}
-    />
+      <div className="relative">
+        <input
+          type={isPassword ? (visible ? "text" : "password") : type}
+          autoCapitalize={type === "text" ? "words" : "off"}
+          data-slot="input"
+          className={cn(
+            "h-auto w-full bg-(--bg-2) border border-(--border-2) rounded-[11px] py-3.25 px-3.5 text-[14.5px] text-(--text-0) outline-none transition-[border-color] duration-150 placeholder:text-(--text-3) focus-visible:border-(--primary)",
+            isPassword && "pr-10",
+            className,
+          )}
+          {...props}
+        />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setVisible((v) => !v)}
+            tabIndex={-1}
+            aria-label={visible ? "Hide password" : "Show password"}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-(--text-3) hover:text-(--text-1) transition-colors cursor-pointer"
+          >
+            {visible ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        )}
+      </div>
+      {error && <p className="text-[12.5px] text-(--danger) mt-1">{error}</p>}
+    </div>
   );
 }
 

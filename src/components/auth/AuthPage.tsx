@@ -1,39 +1,55 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import type { InputHTMLAttributes } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { GitHubIcon, GoogleIcon } from "@/icons";
 import { AUTH_CONTENT } from "@/constants/auth";
+import { handleApiError } from "@/lib/api/handle-error";
+import { loginSchema, registerSchema } from "@/features/auth/schemas";
+import type { LoginInput, RegisterInput } from "@/features/auth/schemas";
+import { useLogin, useRegister } from "@/features/auth/hooks";
 import { AuthLeft } from "./AuthLeft";
 import { AuthLoader } from "@/components/loaders/AuthLoader";
 
 type Mode = "signin" | "signup";
 
-function AuthField({
-  label,
-  ...props
-}: { label: string } & InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <div className="auth-field">
-      <label>{label}</label>
-      <input {...props} />
-    </div>
-  );
-}
+type FormValues = {
+  full_name?: string;
+  email: string;
+  password: string;
+  confirm_password?: string;
+};
 
 export function AuthPage({ mode }: { mode: Mode }) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const content = AUTH_CONTENT[mode];
   const isSignup = mode === "signup";
+  const content = AUTH_CONTENT[mode];
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => router.push("/dashboard"), 1300);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(isSignup ? registerSchema : loginSchema),
+  });
+
+  const loginMutation = useLogin();
+  const registerMutation = useRegister();
+  const isPending = loginMutation.isPending || registerMutation.isPending;
+
+  async function onSubmit(values: FormValues) {
+    try {
+      if (isSignup) {
+        await registerMutation.mutateAsync(values as RegisterInput);
+      } else {
+        await loginMutation.mutateAsync(values as LoginInput);
+      }
+    } catch (err) {
+      handleApiError(err, setError);
+    }
   }
 
   return (
@@ -67,33 +83,48 @@ export function AuthPage({ mode }: { mode: Mode }) {
 
             <div className="auth-divider">or with email</div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               {isSignup && (
-                <AuthField
+                <Input
                   label="Full name"
                   type="text"
                   placeholder="Alex Rivera"
                   autoComplete="name"
+                  error={errors.full_name?.message}
+                  {...register("full_name")}
                 />
               )}
-              <AuthField
+              <Input
                 label="Work email"
                 type="email"
                 placeholder="you@company.com"
                 autoComplete="email"
-                required
+                error={errors.email?.message}
+                {...register("email")}
               />
-              <AuthField
+              <Input
                 label="Password"
                 type="password"
                 placeholder="••••••••"
                 autoComplete={isSignup ? "new-password" : "current-password"}
-                required
+                error={errors.password?.message}
+                {...register("password")}
               />
+              {isSignup && (
+                <Input
+                  label="Confirm password"
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  error={errors.confirm_password?.message}
+                  {...register("confirm_password")}
+                />
+              )}
               <Button
                 type="submit"
                 variant="primary"
                 className="w-full justify-center mt-1.5"
+                disabled={isPending}
               >
                 {content.submit}
               </Button>
@@ -112,7 +143,7 @@ export function AuthPage({ mode }: { mode: Mode }) {
         </div>
       </div>
 
-      <AuthLoader visible={loading} />
+      <AuthLoader visible={isPending} />
     </>
   );
 }
