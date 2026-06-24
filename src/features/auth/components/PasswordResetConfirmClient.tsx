@@ -34,9 +34,7 @@ export const PasswordResetConfirmClient = ({ token }: { token: string }) => {
 
   return (
     <>
-      <h1 className="text-[26px] font-semibold tracking-[-0.02em] mb-1.5 [font-family:var(--font-display)]">
-        {C.confirm.title}
-      </h1>
+      <h1 className="auth-status-title mb-1.5">{C.confirm.title}</h1>
       <p className="text-sm text-(--text-2) mb-7">{C.confirm.subtitle}</p>
 
       <form onSubmit={handleSubmit(onSubmit)}>

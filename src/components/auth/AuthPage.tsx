@@ -57,8 +57,8 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
       <div className="auth">
         <AuthLeft />
 
-        <div className="flex items-center justify-center p-10 bg-(--bg-0)">
-          <div className="w-full max-w-95">
+        <div className="auth-right">
+          <div className="auth-right-inner">
             <h1 className="text-[28px] font-semibold tracking-[-0.02em] mb-1.5 [font-family:var(--font-display)]">
               {content.title}
             </h1>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AuthLeft } from "@/components/auth/AuthLeft";
 import { VerifyEmailClient } from "@/features/auth/components/VerifyEmailClient";
 
 export const metadata: Metadata = {
@@ -13,9 +14,12 @@ export default async function VerifyEmailPage({
   const { token } = await searchParams;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-(--bg-0) p-6">
-      <div className="w-full max-w-sm">
-        <VerifyEmailClient token={token} />
+    <div className="auth">
+      <AuthLeft />
+      <div className="auth-right">
+        <div className="auth-right-inner">
+          <VerifyEmailClient token={token} />
+        </div>
       </div>
     </div>
   );

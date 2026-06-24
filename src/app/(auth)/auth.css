@@ -68,6 +68,32 @@
     border: 1px solid color-mix(in oklab, var(--ai-a) 28%, transparent);
   }
 
+  /* ── Right panel ────────────────────────────────────────────────────────── */
+
+  .auth-right {
+    @apply flex items-center justify-center p-10 bg-(--bg-0);
+  }
+
+  .auth-right-inner {
+    @apply w-full max-w-95;
+  }
+
+  /* ── Status card (verify-email, reset-password success states) ───────────── */
+
+  .auth-status-icon {
+    @apply inline-flex items-center justify-center size-16 rounded-2xl
+           bg-(--bg-2) border border-(--border-1) mb-6;
+  }
+
+  .auth-status-title {
+    @apply text-[26px] font-semibold tracking-[-0.02em] mb-2;
+    font-family: var(--font-display);
+  }
+
+  .auth-status-subtitle {
+    @apply text-sm text-(--text-2) max-w-xs mx-auto mb-8;
+  }
+
   /* ── Divider ─────────────────────────────────────────────────────────────── */
 
   .auth-divider {

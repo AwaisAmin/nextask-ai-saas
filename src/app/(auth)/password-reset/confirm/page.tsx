@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { AuthLeft } from "@/components/auth/AuthLeft";
 import { PasswordResetConfirmClient } from "@/features/auth/components/PasswordResetConfirmClient";
 
 export const metadata: Metadata = {
@@ -16,9 +17,12 @@ export default async function PasswordResetConfirmPage({
   if (!token) redirect("/password-reset");
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-(--bg-0) p-6">
-      <div className="w-full max-w-sm">
-        <PasswordResetConfirmClient token={token} />
+    <div className="auth">
+      <AuthLeft />
+      <div className="auth-right">
+        <div className="auth-right-inner">
+          <PasswordResetConfirmClient token={token} />
+        </div>
       </div>
     </div>
   );

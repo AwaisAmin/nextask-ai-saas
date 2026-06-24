@@ -20,8 +20,11 @@ export const VerifyEmailClient = ({ token }: { token?: string }) => {
 
   if (isLoading)
     return (
-      <div className="flex flex-col items-center gap-4">
-        <Loader2 size={40} className="animate-spin text-(--primary)" />
+      <div className="text-center">
+        <Loader2
+          size={40}
+          className="animate-spin text-(--primary) mx-auto mb-6"
+        />
         <p className="text-sm text-(--text-2)">{C.loading.title}</p>
       </div>
     );

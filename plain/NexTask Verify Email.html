@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-density="regular">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NexTask — Verify your email</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="nextask.css" />
+<link rel="stylesheet" href="landing.css" />
+<link rel="stylesheet" href="auth.css" />
+</head>
+<body class="auth-body lp">
+
+<div class="verify-stage">
+  <div class="glow"></div>
+
+  <a class="lp-logo" href="NexTask Landing.html" style="position:absolute;top:32px;left:32px;z-index:3;"><span class="lp-logo-mark">N</span>NexTask</a>
+
+  <div class="verify-card" id="card">
+    <!-- VERIFYING -->
+    <div id="state-verifying">
+      <div class="ring" style="margin-bottom:26px;"></div>
+      <h1 class="auth-title" style="font-size:24px;">Verifying your email…</h1>
+      <p class="auth-sub" style="margin-bottom:0;">Hang tight while we confirm your address. This only takes a moment.</p>
+    </div>
+
+    <!-- VERIFIED (success) -->
+    <div id="state-verified" style="display:none;">
+      <div class="auth-badge ok check-pop" style="margin:0 auto 24px;width:66px;height:66px;border-radius:20px;">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+      </div>
+      <h1 class="auth-title">Email verified</h1>
+      <p class="auth-sub">Your address <b id="vEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2d4c4148556d4c4e4048035e5958494442">[email&#160;protected]</a></b> is confirmed. Your NexTask workspace is ready to go.</p>
+      <a class="btn btn-primary btn-lg block" href="NexTask.html">
+        Continue to NexTask
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <div style="margin-top:18px;font-size:12.5px;color:var(--text-3);">Redirecting you automatically in <b id="count" style="color:var(--text-1)">5</b>s…</div>
+    </div>
+
+    <!-- EXPIRED / invalid -->
+    <div id="state-expired" style="display:none;">
+      <div class="auth-badge warn" style="margin:0 auto 24px;width:66px;height:66px;border-radius:20px;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V13"/><path d="M12 16.5h.01"/></svg>
+      </div>
+      <h1 class="auth-title">This link has expired</h1>
+      <p class="auth-sub">Verification links are valid for 24 hours. No problem — we can send you a fresh one.</p>
+      <button class="btn btn-primary btn-lg block" onclick="resend()" id="resendBtn">Resend verification email</button>
+      <a class="back-link" href="NexTask Login.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg> Back to sign in</a>
+    </div>
+
+    <!-- resent confirmation -->
+    <div id="state-resent" style="display:none;">
+      <div class="auth-badge ai check-pop" style="margin:0 auto 24px;width:66px;height:66px;border-radius:20px;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l8 6 8-6"/><rect x="4" y="5" width="16" height="14" rx="2"/></svg>
+      </div>
+      <h1 class="auth-title">Check your inbox</h1>
+      <p class="auth-sub">We sent a new verification link to <b id="vEmail2"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cfaea3aab78faeaca2aae1bcbbbaaba6a0">[email&#160;protected]</a></b>. It may take a minute to arrive.</p>
+      <a class="back-link" href="NexTask Login.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg> Back to sign in</a>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ?state=expired forces the expired view; default simulates a successful verify
+  const params = new URLSearchParams(location.search);
+  const email = params.get('email') || 'alex@acme.studio';
+  document.getElementById('vEmail').textContent = email;
+  document.getElementById('vEmail2').textContent = email;
+
+  const show = (id) => {
+    ['verifying','verified','expired','resent'].forEach(s =>
+      document.getElementById('state-' + s).style.display = (s === id ? 'block' : 'none'));
+  };
+
+  function startSuccessCountdown() {
+    let n = 5;
+    const el = document.getElementById('count');
+    const t = setInterval(() => {
+      n--; if (el) el.textContent = n;
+      if (n <= 0) { clearInterval(t); window.location.href = 'NexTask.html'; }
+    }, 1000);
+  }
+
+  function resend() {
+    const b = document.getElementById('resendBtn');
+    b.textContent = 'Sending…'; b.disabled = true;
+    setTimeout(() => show('resent'), 900);
+  }
+
+  // flow
+  if (params.get('state') === 'expired') {
+    setTimeout(() => show('expired'), 1400);
+  } else {
+    setTimeout(() => { show('verified'); startSuccessCountdown(); }, 1800);
+  }
+</script>
+</body>
+</html>
