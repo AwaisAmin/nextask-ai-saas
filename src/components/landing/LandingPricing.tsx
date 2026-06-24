@@ -23,7 +23,7 @@ export function LandingPricing() {
           </p>
         </div>
 
-        <div style={{ textAlign: "center" }}>
+        <div className="text-center">
           <div className="price-toggle reveal">
             <button
               className={!yearly ? "on" : ""}

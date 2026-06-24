@@ -31,9 +31,8 @@ export function LandingNav() {
             </Link>
           ))}
           <Link
-            className="btn btn-primary"
+            className="btn btn-primary py-2.25 px-4 text-sm"
             href="/register"
-            style={{ padding: "9px 16px", fontSize: "14px" }}
           >
             Get started
           </Link>

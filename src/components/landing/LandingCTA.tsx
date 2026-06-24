@@ -3,18 +3,13 @@ import { ArrowRightIcon } from "@/icons";
 
 export function LandingCTA() {
   return (
-    <section className="section" style={{ paddingTop: 20 }}>
+    <section className="section pt-5">
       <div className="wrap">
         <div className="cta-band reveal">
           <div className="glow-c" />
-          <div style={{ position: "relative", zIndex: 2 }}>
-            <h2 className="h2" style={{ marginBottom: 14 }}>
-              Give your team an AI teammate
-            </h2>
-            <p
-              className="lead"
-              style={{ maxWidth: 520, margin: "0 auto 30px" }}
-            >
+          <div className="relative z-2">
+            <h2 className="h2 mb-3.5">Give your team an AI teammate</h2>
+            <p className="lead max-w-130 mx-auto mb-7.5">
               Free for small teams. Two minutes to set up. Your first sprint
               planned before lunch.
             </p>

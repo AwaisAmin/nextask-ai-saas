@@ -117,9 +117,9 @@ export function LandingHero() {
       <div className="wrap showcase reveal in d2">
         <div className="browser">
           <div className="browser-bar">
-            <span className="tdot" style={{ background: "#ff5c66" }} />
-            <span className="tdot" style={{ background: "#f5b23e" }} />
-            <span className="tdot" style={{ background: "#36c58e" }} />
+            <span className="tdot bg-[#ff5c66]" />
+            <span className="tdot bg-[#f5b23e]" />
+            <span className="tdot bg-[#36c58e]" />
             <div className="browser-url">app.nextask.com/acme-studio/board</div>
           </div>
           <div className="browser-body">
@@ -128,9 +128,7 @@ export function LandingHero() {
               <div className="mini-side">
                 <div className="ws">
                   <span>N</span>
-                  <div style={{ fontSize: 12, fontWeight: 600 }}>
-                    Acme Studio
-                  </div>
+                  <div className="text-xs font-semibold">Acme Studio</div>
                 </div>
                 <div className="mini-ai">
                   <SparkIcon size={13} />
@@ -161,16 +159,10 @@ export function LandingHero() {
                   <div className="mini-col">
                     <h5>
                       To do
-                      <span style={{ color: "var(--text-3)" }}>
-                        {todoCount}
-                      </span>
+                      <span className="text-(--text-3)">{todoCount}</span>
                     </h5>
                     {aiCards.map((c) => (
-                      <div
-                        key={c.id}
-                        className="mini-card fresh"
-                        style={{ position: "relative" }}
-                      >
+                      <div key={c.id} className="mini-card fresh relative">
                         <span className="ai-spark">
                           <SparkIcon
                             size={9}
@@ -183,30 +175,16 @@ export function LandingHero() {
                         <div className="foot">
                           <span className="mini-bars">
                             <span
-                              style={{
-                                height: 5,
-                                background: c.bars[0]
-                                  ? "var(--p-high)"
-                                  : "var(--border-2)",
-                              }}
+                              className={`h-1.25 ${c.bars[0] ? "bg-(--p-high)" : "bg-(--border-2)"}`}
                             />
                             <span
-                              style={{
-                                height: 6,
-                                background: c.bars[1]
-                                  ? "var(--p-high)"
-                                  : "var(--border-2)",
-                              }}
+                              className={`h-1.5  ${c.bars[1] ? "bg-(--p-high)" : "bg-(--border-2)"}`}
                             />
                             <span
-                              style={{
-                                height: 9,
-                                background: c.bars[2]
-                                  ? "var(--p-high)"
-                                  : "var(--border-2)",
-                              }}
+                              className={`h-2.25 ${c.bars[2] ? "bg-(--p-high)" : "bg-(--border-2)"}`}
                             />
                           </span>
+                          {/* c.color is data-driven — must stay inline */}
                           <span
                             className="mini-ava"
                             style={{ background: c.color }}
@@ -219,20 +197,11 @@ export function LandingHero() {
                       <div className="ttl">Footer + newsletter capture</div>
                       <div className="foot">
                         <span className="mini-bars">
-                          <span
-                            style={{ height: 5, background: "var(--p-low)" }}
-                          />
-                          <span
-                            style={{ height: 6, background: "var(--border-2)" }}
-                          />
-                          <span
-                            style={{ height: 9, background: "var(--border-2)" }}
-                          />
+                          <span className="h-1.25 bg-(--p-low)" />
+                          <span className="h-1.5  bg-(--border-2)" />
+                          <span className="h-2.25 bg-(--border-2)" />
                         </span>
-                        <span
-                          className="mini-ava"
-                          style={{ background: "#4ca6ff" }}
-                        />
+                        <span className="mini-ava bg-[#4ca6ff]" />
                       </div>
                     </div>
                     <div className="mini-card">
@@ -240,20 +209,11 @@ export function LandingHero() {
                       <div className="ttl">Migrate blog to new CMS</div>
                       <div className="foot">
                         <span className="mini-bars">
-                          <span
-                            style={{ height: 5, background: "var(--p-medium)" }}
-                          />
-                          <span
-                            style={{ height: 6, background: "var(--p-medium)" }}
-                          />
-                          <span
-                            style={{ height: 9, background: "var(--border-2)" }}
-                          />
+                          <span className="h-1.25 bg-(--p-medium)" />
+                          <span className="h-1.5  bg-(--p-medium)" />
+                          <span className="h-2.25 bg-(--border-2)" />
                         </span>
-                        <span
-                          className="mini-ava"
-                          style={{ background: "#7b61ff" }}
-                        />
+                        <span className="mini-ava bg-[#7b61ff]" />
                       </div>
                     </div>
                   </div>
@@ -261,10 +221,9 @@ export function LandingHero() {
                   {/* In Progress */}
                   <div className="mini-col">
                     <h5>
-                      In progress{" "}
-                      <span style={{ color: "var(--text-3)" }}>2</span>
+                      In progress <span className="text-(--text-3)">2</span>
                     </h5>
-                    <div className="mini-card" style={{ position: "relative" }}>
+                    <div className="mini-card relative">
                       <span className="ai-spark">
                         <SparkIcon
                           size={9}
@@ -276,20 +235,11 @@ export function LandingHero() {
                       <div className="ttl">Redesign homepage hero</div>
                       <div className="foot">
                         <span className="mini-bars">
-                          <span
-                            style={{ height: 5, background: "var(--p-high)" }}
-                          />
-                          <span
-                            style={{ height: 6, background: "var(--p-high)" }}
-                          />
-                          <span
-                            style={{ height: 9, background: "var(--p-high)" }}
-                          />
+                          <span className="h-1.25 bg-(--p-high)" />
+                          <span className="h-1.5  bg-(--p-high)" />
+                          <span className="h-2.25 bg-(--p-high)" />
                         </span>
-                        <span
-                          className="mini-ava"
-                          style={{ background: "#ff8a4c" }}
-                        />
+                        <span className="mini-ava bg-[#ff8a4c]" />
                       </div>
                     </div>
                     <div className="mini-card">
@@ -297,20 +247,11 @@ export function LandingHero() {
                       <div className="ttl">Responsive nav + mega-menu</div>
                       <div className="foot">
                         <span className="mini-bars">
-                          <span
-                            style={{ height: 5, background: "var(--p-high)" }}
-                          />
-                          <span
-                            style={{ height: 6, background: "var(--p-high)" }}
-                          />
-                          <span
-                            style={{ height: 9, background: "var(--p-high)" }}
-                          />
+                          <span className="h-1.25 bg-(--p-high)" />
+                          <span className="h-1.5  bg-(--p-high)" />
+                          <span className="h-2.25 bg-(--p-high)" />
                         </span>
-                        <span
-                          className="mini-ava"
-                          style={{ background: "#4ca6ff" }}
-                        />
+                        <span className="mini-ava bg-[#4ca6ff]" />
                       </div>
                     </div>
                   </div>
@@ -318,34 +259,25 @@ export function LandingHero() {
                   {/* Done */}
                   <div className="mini-col">
                     <h5>
-                      Done <span style={{ color: "var(--text-3)" }}>1</span>
+                      Done <span className="text-(--text-3)">1</span>
                     </h5>
-                    <div className="mini-card" style={{ opacity: 0.6 }}>
+                    <div className="mini-card opacity-60">
                       <div className="id">WEB-29</div>
                       <div className="ttl">Audit design tokens</div>
                       <div className="foot">
                         <span className="mini-bars">
-                          <span
-                            style={{ height: 5, background: "var(--p-low)" }}
-                          />
-                          <span
-                            style={{ height: 6, background: "var(--border-2)" }}
-                          />
-                          <span
-                            style={{ height: 9, background: "var(--border-2)" }}
-                          />
+                          <span className="h-1.25 bg-(--p-low)" />
+                          <span className="h-1.5  bg-(--border-2)" />
+                          <span className="h-2.25 bg-(--border-2)" />
                         </span>
-                        <span
-                          className="mini-ava"
-                          style={{ background: "#ff8a4c" }}
-                        />
+                        <span className="mini-ava bg-[#ff8a4c]" />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* AI Command Overlay */}
+              {/* AI Command Overlay — opacity is animated state, must stay inline */}
               <div
                 className="mini-cmd"
                 style={{

@@ -3,7 +3,7 @@ import { TILES } from "@/constants/landing";
 
 export function LandingBento() {
   return (
-    <section className="section" id="features" style={{ paddingTop: 40 }}>
+    <section className="section pt-10" id="features">
       <div className="wrap">
         <div className="section-head reveal">
           <div className="eyebrow">One workspace</div>

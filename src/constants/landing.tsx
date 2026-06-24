@@ -148,6 +148,7 @@ export const QUOTES = [
     name: "Theo Brandt",
     role: "Head of Product, Loop",
     gradient: "linear-gradient(150deg, #7b61ff, #4b3aa0)",
+    delay: "",
   },
   {
     text: "Setup took two minutes. By the end of day one we'd shipped our first sprint. The ⌘K agent feels like a senior PM that never sleeps.",
@@ -155,6 +156,7 @@ export const QUOTES = [
     name: "Sara Malik",
     role: "Design Lead, Northwind",
     gradient: "linear-gradient(150deg, #ff8a4c, #b5552a)",
+    delay: "d1",
   },
   {
     text: "Automations + AI summaries cut our status-meeting time in half. Engineering finally has one source of truth.",
@@ -162,6 +164,7 @@ export const QUOTES = [
     name: "Omar Reyes",
     role: "Eng Manager, Vertex",
     gradient: "linear-gradient(150deg, #36c58e, #1f7a58)",
+    delay: "d2",
   },
 ];
 
@@ -173,19 +176,28 @@ export const STATS = [
     display: "3 in 1",
     count: null as null,
     suffix: undefined as string | undefined,
+    delay: "",
   },
-  { label: "Less time on busywork", display: "0%", count: 40, suffix: "%" },
+  {
+    label: "Less time on busywork",
+    display: "0%",
+    count: 40,
+    suffix: "%",
+    delay: "d1",
+  },
   {
     label: "From signup to first task",
     display: "0 min",
     count: 2,
     suffix: " min",
+    delay: "d2",
   },
   {
     label: "Teams onboard & counting",
     display: "0+",
     count: 12000,
     suffix: "+",
+    delay: "d3",
   },
 ];
 

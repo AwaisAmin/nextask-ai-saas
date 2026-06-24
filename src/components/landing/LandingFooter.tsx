@@ -7,17 +7,10 @@ export function LandingFooter() {
       <div className="wrap">
         <div className="footer-grid">
           <div>
-            <Link className="lp-logo" href="#top" style={{ marginBottom: 14 }}>
+            <Link className="lp-logo mb-3.5" href="#top">
               <span className="lp-logo-mark">N</span>NexTask
             </Link>
-            <p
-              style={{
-                fontSize: 14,
-                color: "var(--text-2)",
-                lineHeight: 1.6,
-                maxWidth: 280,
-              }}
-            >
+            <p className="footer-desc">
               One workspace for tasks, docs and chat — supercharged by an AI
               teammate.
             </p>
@@ -35,16 +28,10 @@ export function LandingFooter() {
         </div>
         <div className="footer-bottom">
           <span>© 2026 NexTask, Inc. All rights reserved.</span>
-          <span style={{ display: "flex", gap: 18 }}>
-            <a href="#" style={{ color: "var(--text-3)" }}>
-              Privacy
-            </a>
-            <a href="#" style={{ color: "var(--text-3)" }}>
-              Terms
-            </a>
-            <a href="#" style={{ color: "var(--text-3)" }}>
-              Security
-            </a>
+          <span className="footer-legal">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Security</a>
           </span>
         </div>
       </div>

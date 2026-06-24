@@ -60,156 +60,68 @@ export function LandingAISection() {
                 </div>
               ))}
             </div>
-            <Link
-              className="btn btn-ai btn-lg"
-              href="#features"
-              style={{ marginTop: 30 }}
-            >
+            <Link className="btn btn-ai btn-lg mt-7.5" href="#features">
               <SparkIcon size={16} />
               See the agent in action
             </Link>
           </div>
 
           <div className="split-visual reveal d1">
-            <div
-              ref={cardRef}
-              className="visual-card"
-              style={{
-                padding: 22,
-                background:
-                  "linear-gradient(160deg, color-mix(in oklab, var(--ai-a) 8%, var(--bg-1)), var(--bg-1))",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  marginBottom: 18,
-                }}
-              >
-                <span
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 9,
-                    display: "grid",
-                    placeItems: "center",
-                    background:
-                      "linear-gradient(120deg, var(--ai-a), var(--ai-b))",
-                    color: "#1a0e06",
-                    boxShadow: "var(--ai-glow)",
-                  }}
-                >
+            <div ref={cardRef} className="visual-card ai-vis-card">
+              <div className="ai-vis-header">
+                <span className="ai-vis-icon">
                   <SparkIcon size={17} />
                 </span>
                 <div>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "0.04em",
-                      background:
-                        "linear-gradient(110deg, var(--ai-a), var(--ai-b))",
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      color: "transparent",
-                    }}
-                  >
-                    AI AGENT
-                  </div>
-                  <div style={{ fontSize: 13, color: "var(--text-1)" }}>
+                  <div className="ai-vis-label">AI AGENT</div>
+                  <div className="ai-vis-sub">
                     Rebalance this sprint&apos;s workload
                   </div>
                 </div>
               </div>
 
               {ROWS.map((r) => (
-                <div key={r.who} style={{ marginBottom: 14 }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginBottom: 6,
-                      fontSize: 12.5,
-                    }}
-                  >
-                    <span
-                      style={{ display: "flex", alignItems: "center", gap: 8 }}
-                    >
+                <div key={r.who} className="ai-vis-row">
+                  <div className="ai-vis-row-head">
+                    <span className="ai-vis-who">
+                      {/* r.color is data-driven — must stay inline */}
                       <span
-                        style={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: "50%",
-                          background: r.color,
-                        }}
+                        className="size-5 rounded-full shrink-0"
+                        style={{ background: r.color }}
                       />
                       {r.who}
                     </span>
                     {r.tag && (
                       <span
-                        style={{
-                          fontSize: 10.5,
-                          fontWeight: 700,
-                          color:
-                            r.tag === "overloaded"
-                              ? "var(--danger)"
-                              : "var(--ok)",
-                        }}
+                        className={`ai-vis-tag ${r.tag === "overloaded" ? "danger" : "ok"}`}
                       >
                         {r.tag}
                       </span>
                     )}
                   </div>
-                  <div
-                    style={{
-                      height: 7,
-                      borderRadius: 99,
-                      background: "var(--bg-4)",
-                      overflow: "hidden",
-                    }}
-                  >
+                  <div className="ai-vis-track">
+                    {/* width and background are animated/data-driven — must stay inline */}
                     <div
+                      className="ai-vis-fill"
                       style={{
-                        height: "100%",
                         width: `${animated ? r.after : r.before}%`,
-                        borderRadius: 99,
                         background: r.color,
-                        transition: "width 1s cubic-bezier(.2,.8,.2,1)",
                       }}
                     />
                   </div>
                 </div>
               ))}
 
+              {/* opacity is animated state — must stay inline */}
               <div
-                style={{
-                  opacity: animated ? 1 : 0,
-                  transition: "opacity .4s",
-                  marginTop: 16,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 9,
-                  padding: "11px 13px",
-                  borderRadius: 11,
-                  background:
-                    "color-mix(in oklab, var(--ai-a) 8%, var(--bg-2))",
-                  border:
-                    "1px solid color-mix(in oklab, var(--ai-a) 24%, var(--border))",
-                  fontSize: 12.5,
-                  color: "var(--text-1)",
-                }}
+                className="ai-vis-result"
+                style={{ opacity: animated ? 1 : 0 }}
               >
-                <span style={{ color: "var(--ok)", display: "inline-flex" }}>
+                <span className="text-(--ok) inline-flex">
                   <CheckIcon size={15} strokeWidth={2.4} />
                 </span>
-                Moved{" "}
-                <b style={{ color: "var(--text-0)", margin: "0 4px" }}>
-                  WEB-52
-                </b>{" "}
-                from Lena → Dev to balance the sprint.
+                Moved <b className="text-(--text-0) mx-1">WEB-52</b> from Lena →
+                Dev to balance the sprint.
               </div>
             </div>
           </div>
