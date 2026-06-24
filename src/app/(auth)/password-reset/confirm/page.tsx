@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { AuthLeft } from "@/components/auth/AuthLeft";
 import { PasswordResetConfirmClient } from "@/features/auth/components/PasswordResetConfirmClient";
+import { AUTH_LEFT_TAG } from "@/constants/auth";
 
 export const metadata: Metadata = {
   title: "NexTask — Set new password",
@@ -18,11 +19,9 @@ export default async function PasswordResetConfirmPage({
 
   return (
     <div className="auth">
-      <AuthLeft />
+      <AuthLeft tag={AUTH_LEFT_TAG.resetPassword} />
       <div className="auth-right">
-        <div className="auth-right-inner">
-          <PasswordResetConfirmClient token={token} />
-        </div>
+        <PasswordResetConfirmClient token={token} />
       </div>
     </div>
   );

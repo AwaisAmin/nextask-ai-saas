@@ -58,7 +58,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
         <AuthLeft />
 
         <div className="auth-right">
-          <div className="auth-right-inner">
+          <div className="auth-card" style={{ maxWidth: "380px" }}>
             <h1 className="text-[28px] font-semibold tracking-[-0.02em] mb-1.5 [font-family:var(--font-display)]">
               {content.title}
             </h1>

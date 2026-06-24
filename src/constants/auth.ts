@@ -39,6 +39,19 @@ export const VERIFY_EMAIL_CONTENT = {
   },
 } as const;
 
+export const AUTH_LEFT_TAG = {
+  forgotPassword: {
+    label: "Account security",
+    quote:
+      "Forgot it? Happens to the best of us. We'll get you back into your workspace in under a minute.",
+  },
+  resetPassword: {
+    label: "Choose a strong password",
+    quote:
+      "A few seconds now keeps your team's work safe. Pick something only you would know.",
+  },
+} as const;
+
 export const PASSWORD_RESET_CONTENT = {
   request: {
     title: "Forgot your password?",
