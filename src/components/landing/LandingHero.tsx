@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, CheckIcon, PlayIcon, SparkIcon } from "@/icons";
 import { AI_CARDS, PROMPT, STEPS, type AiCard } from "@/constants/landing";
 
@@ -11,34 +12,32 @@ export function LandingHero() {
   const [cmdOpacity, setCmdOpacity] = useState(1);
   const [aiCards, setAiCards] = useState<AiCard[]>([]);
   const [todoCount, setTodoCount] = useState(2);
-  const cancelRef = useRef(false);
-
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    cancelRef.current = false;
 
+    let cancelled = false;
     const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
     async function runDemo() {
-      while (!cancelRef.current) {
+      while (!cancelled) {
         setCmdText("");
         setSteps([false, false, false]);
         setCmdOpacity(1);
         setAiCards([]);
         setTodoCount(2);
         await sleep(900);
-        if (cancelRef.current) break;
+        if (cancelled) break;
 
         for (let i = 0; i <= PROMPT.length; i++) {
-          if (cancelRef.current) break;
+          if (cancelled) break;
           setCmdText(PROMPT.slice(0, i));
           await sleep(38);
         }
         await sleep(450);
-        if (cancelRef.current) break;
+        if (cancelled) break;
 
         for (let i = 0; i < 3; i++) {
-          if (cancelRef.current) break;
+          if (cancelled) break;
           setSteps((prev) => {
             const next = [...prev];
             next[i] = true;
@@ -47,14 +46,14 @@ export function LandingHero() {
           await sleep(620);
         }
         await sleep(350);
-        if (cancelRef.current) break;
+        if (cancelled) break;
 
         setCmdOpacity(0);
         await sleep(420);
-        if (cancelRef.current) break;
+        if (cancelled) break;
 
         for (let i = 0; i < AI_CARDS.length; i++) {
-          if (cancelRef.current) break;
+          if (cancelled) break;
           const card = AI_CARDS[i];
           setAiCards((prev) => [card, ...prev]);
           setTodoCount(2 + i + 1);
@@ -67,7 +66,7 @@ export function LandingHero() {
 
     runDemo();
     return () => {
-      cancelRef.current = true;
+      cancelled = true;
     };
   }, []);
 
@@ -98,14 +97,18 @@ export function LandingHero() {
         </p>
 
         <div className="hero-cta reveal in d2">
-          <Link className="btn btn-primary btn-lg" href="/register">
-            Start free
-            <ArrowRightIcon size={17} />
-          </Link>
-          <Link className="btn btn-ghost btn-lg" href="#features">
-            <PlayIcon size={16} />
-            Watch the demo
-          </Link>
+          <Button asChild variant="primary" size="lg">
+            <Link href="/register">
+              Start free
+              <ArrowRightIcon size={17} />
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" size="lg">
+            <Link href="#features">
+              <PlayIcon size={16} />
+              Watch the demo
+            </Link>
+          </Button>
         </div>
 
         <div className="hero-note reveal in d3">

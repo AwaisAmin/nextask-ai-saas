@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { CheckIcon } from "@/icons";
 import {
   ENTERPRISE_FEATURES,
@@ -61,9 +62,13 @@ export function LandingPricing() {
                 </li>
               ))}
             </ul>
-            <Link className="btn btn-ghost" href="/register">
-              Get started
-            </Link>
+            <Button
+              asChild
+              variant="ghost"
+              className="w-full justify-center mt-auto"
+            >
+              <Link href="/register">Get started</Link>
+            </Button>
           </div>
 
           {/* Pro */}
@@ -87,9 +92,13 @@ export function LandingPricing() {
                 </li>
               ))}
             </ul>
-            <Link className="btn btn-primary" href="/register">
-              Start free trial
-            </Link>
+            <Button
+              asChild
+              variant="primary"
+              className="w-full justify-center mt-auto"
+            >
+              <Link href="/register">Start free trial</Link>
+            </Button>
           </div>
 
           {/* Enterprise */}
@@ -111,9 +120,13 @@ export function LandingPricing() {
                 </li>
               ))}
             </ul>
-            <Link className="btn btn-ghost" href="/login">
-              Contact sales
-            </Link>
+            <Button
+              asChild
+              variant="ghost"
+              className="w-full justify-center mt-auto"
+            >
+              <Link href="/login">Contact sales</Link>
+            </Button>
           </div>
         </div>
       </div>

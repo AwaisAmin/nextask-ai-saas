@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { NAV_LINKS } from "@/constants/landing";
 
 export function LandingNav() {
@@ -30,12 +31,9 @@ export function LandingNav() {
               {label}
             </Link>
           ))}
-          <Link
-            className="btn btn-primary py-2.25 px-4 text-sm"
-            href="/register"
-          >
-            Get started
-          </Link>
+          <Button asChild variant="primary" size="sm">
+            <Link href="/register">Get started</Link>
+          </Button>
         </div>
       </div>
     </nav>

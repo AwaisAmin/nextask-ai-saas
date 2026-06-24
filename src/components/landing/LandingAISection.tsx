@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { CheckIcon, OutlineIcon, SparkIcon } from "@/icons";
 import { AI_FEATURES, ROWS } from "@/constants/landing";
 
@@ -60,10 +61,12 @@ export function LandingAISection() {
                 </div>
               ))}
             </div>
-            <Link className="btn btn-ai btn-lg mt-7.5" href="#features">
-              <SparkIcon size={16} />
-              See the agent in action
-            </Link>
+            <Button asChild variant="ai" size="lg" className="mt-7.5">
+              <Link href="#features">
+                <SparkIcon size={16} />
+                See the agent in action
+              </Link>
+            </Button>
           </div>
 
           <div className="split-visual reveal d1">

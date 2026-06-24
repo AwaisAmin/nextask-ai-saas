@@ -581,7 +581,7 @@ body.lp-body {
     @apply inline-flex bg-(--bg-2) border border-border rounded-full p-1 gap-1 mx-auto mb-11;
 
     & button {
-      @apply py-2 px-4.5 rounded-full text-sm font-semibold text-(--text-1) transition-all duration-200;
+      @apply py-2 px-4.5 rounded-full text-sm font-semibold text-(--text-1) transition-all duration-200 cursor-pointer;
       &.on {
         @apply bg-primary text-(--primary-ink);
       }
@@ -624,10 +624,6 @@ body.lp-body {
       & .ck {
         @apply text-(--ok) shrink-0 mt-px;
       }
-    }
-
-    & .btn {
-      @apply w-full justify-center mt-auto;
     }
   }
 

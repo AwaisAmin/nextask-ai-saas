@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@/icons";
 
 export function LandingCTA() {
@@ -14,13 +15,15 @@ export function LandingCTA() {
               planned before lunch.
             </p>
             <div className="hero-cta">
-              <Link className="btn btn-primary btn-lg" href="/register">
-                Start free
-                <ArrowRightIcon size={17} />
-              </Link>
-              <Link className="btn btn-ghost btn-lg" href="#features">
-                Explore the demo
-              </Link>
+              <Button asChild variant="primary" size="lg">
+                <Link href="/register">
+                  Start free
+                  <ArrowRightIcon size={17} />
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" size="lg">
+                <Link href="#features">Explore the demo</Link>
+              </Button>
             </div>
           </div>
         </div>
