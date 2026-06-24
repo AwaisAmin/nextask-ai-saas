@@ -1,3 +1,4 @@
+import { OutlineIcon } from "@/icons";
 import { TILES } from "@/constants/landing";
 
 export function LandingBento() {
@@ -19,18 +20,7 @@ export function LandingBento() {
               className={`tile reveal${tile.delay ? ` ${tile.delay}` : ""}${tile.wide ? " wide" : ""}`}
             >
               <div className="ic">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  {tile.icon}
-                </svg>
+                <OutlineIcon size={20}>{tile.icon}</OutlineIcon>
               </div>
               <h4>{tile.title}</h4>
               <p>{tile.desc}</p>

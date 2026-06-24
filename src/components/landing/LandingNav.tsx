@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { NAV_LINKS } from "@/constants/landing";
 
 export function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -20,18 +21,15 @@ export function LandingNav() {
           <span className="lp-logo-mark">N</span>NexTask
         </Link>
         <div className="lp-navlinks">
-          <Link className="lp-navlink hide-m" href="#features">
-            Product
-          </Link>
-          <Link className="lp-navlink hide-m" href="#ai">
-            AI Agent
-          </Link>
-          <Link className="lp-navlink hide-m" href="#pricing">
-            Pricing
-          </Link>
-          <Link className="lp-navlink" href="/login">
-            Sign in
-          </Link>
+          {NAV_LINKS.map(({ label, href, hideOnMobile }) => (
+            <Link
+              key={label}
+              className={`lp-navlink${hideOnMobile ? " hide-m" : ""}`}
+              href={href}
+            >
+              {label}
+            </Link>
+          ))}
           <Link
             className="btn btn-primary"
             href="/register"

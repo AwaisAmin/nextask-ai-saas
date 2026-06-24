@@ -1,5 +1,18 @@
 import type { ReactNode } from "react";
 
+// ─── Nav ──────────────────────────────────────────────────────────────────────
+
+export const NAV_LINKS: {
+  label: string;
+  href: string;
+  hideOnMobile?: boolean;
+}[] = [
+  { label: "Product", href: "#features", hideOnMobile: true },
+  { label: "AI Agent", href: "#ai", hideOnMobile: true },
+  { label: "Pricing", href: "#pricing", hideOnMobile: true },
+  { label: "Sign in", href: "/login" },
+];
+
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
 export const PROMPT = "Plan the website redesign sprint";
@@ -103,15 +116,14 @@ export const ROWS = [
   { who: "Omar", color: "#36C58E", before: 45, after: 49, tag: "" },
 ];
 
-export const AI_FEATURES: {
-  icon: ReactNode;
-  extra?: ReactNode;
-  title: string;
-  desc: string;
-}[] = [
+export const AI_FEATURES: { icon: ReactNode; title: string; desc: string }[] = [
   {
-    icon: <rect x="3" y="4" width="18" height="16" rx="2" />,
-    extra: <path d="M9 4v16M15 4v16" />,
+    icon: (
+      <>
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <path d="M9 4v16M15 4v16" />
+      </>
+    ),
     title: "Plans sprints for you",
     desc: '"Plan the next sprint" → tasks created, prioritized, assigned by skill and availability.',
   },

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CheckIcon, SparkIcon } from "@/icons";
+import { CheckIcon, OutlineIcon, SparkIcon } from "@/icons";
 import { AI_FEATURES, ROWS } from "@/constants/landing";
 
 export function LandingAISection() {
@@ -48,22 +48,10 @@ export function LandingAISection() {
               exactly what changed.
             </p>
             <div className="feat-list">
-              {AI_FEATURES.map(({ icon, extra, title, desc }) => (
+              {AI_FEATURES.map(({ icon, title, desc }) => (
                 <div key={title} className="feat-item">
                   <div className="feat-ic ai">
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      {icon}
-                      {extra}
-                    </svg>
+                    <OutlineIcon size={18}>{icon}</OutlineIcon>
                   </div>
                   <div>
                     <h4>{title}</h4>
