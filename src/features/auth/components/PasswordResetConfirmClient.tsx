@@ -10,11 +10,9 @@ import { PasswordStrength } from "./PasswordStrength";
 import { getPasswordScore } from "../utils/password";
 import { PASSWORD_RESET_CONTENT as C } from "@/constants/auth";
 import { passwordResetConfirmSchema } from "@/features/auth/schemas";
-import type { PasswordResetConfirmInput } from "@/features/auth/schemas";
 import { useConfirmPasswordReset } from "@/features/auth/hooks";
 import { handleApiError } from "@/lib/api/handle-error";
-
-type FormValues = Omit<PasswordResetConfirmInput, "token">;
+import type { PasswordResetFormValues as FormValues } from "@/features/auth/types";
 
 export const PasswordResetConfirmClient = ({
   token,
@@ -91,11 +89,8 @@ export const PasswordResetConfirmClient = ({
         <Button
           type="submit"
           variant="primary"
-          className="w-full justify-center mt-2"
+          className={`w-full justify-center mt-2${!isValid ? " opacity-55 pointer-events-none" : ""}`}
           disabled={mutation.isPending || !isValid}
-          style={
-            !isValid ? { opacity: 0.55, pointerEvents: "none" } : undefined
-          }
         >
           {mutation.isPending ? "Updating…" : C.confirm.submit}
         </Button>

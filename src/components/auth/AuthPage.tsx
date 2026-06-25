@@ -14,17 +14,9 @@ import type { LoginInput, RegisterInput } from "@/features/auth/schemas";
 import { useLogin, useRegister } from "@/features/auth/hooks";
 import { AuthLeft } from "./AuthLeft";
 import { AuthLoader } from "@/components/loaders/AuthLoader";
+import type { AuthMode, AuthFormValues } from "./types";
 
-type Mode = "signin" | "signup";
-
-type FormValues = {
-  full_name?: string;
-  email: string;
-  password: string;
-  confirm_password?: string;
-};
-
-export const AuthPage = ({ mode }: { mode: Mode }) => {
+export const AuthPage = ({ mode }: { mode: AuthMode }) => {
   const isSignup = mode === "signup";
   const content = AUTH_CONTENT[mode];
 
@@ -33,7 +25,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<AuthFormValues>({
     resolver: zodResolver(isSignup ? registerSchema : loginSchema),
   });
 
@@ -49,6 +41,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
       } else {
         await loginMutation.mutateAsync(values as LoginInput);
       }
+
       setIsNavigating(true);
     } catch (err) {
       handleApiError(err, setError);
@@ -61,7 +54,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
         <AuthLeft />
 
         <div className="auth-right">
-          <div className="auth-card" style={{ maxWidth: "380px" }}>
+          <div className="auth-card max-w-[380px]">
             <h1 className="text-[28px] font-semibold tracking-[-0.02em] mb-1.5 [font-family:var(--font-display)]">
               {content.title}
             </h1>

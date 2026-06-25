@@ -1,19 +1,10 @@
-export type PasswordChecks = {
-  len: boolean;
-  case: boolean;
-  num: boolean;
-  sym: boolean;
-};
+import type {
+  PasswordChecks,
+  PasswordRequirement,
+  PasswordScore,
+} from "../types";
 
-export type PasswordScore = {
-  checks: PasswordChecks;
-  score: number;
-};
-
-export type PasswordRequirement = {
-  key: keyof PasswordChecks;
-  label: string;
-};
+export type { PasswordChecks, PasswordScore, PasswordRequirement };
 
 export const PASSWORD_REQUIREMENTS: PasswordRequirement[] = [
   { key: "len", label: "8+ characters" },

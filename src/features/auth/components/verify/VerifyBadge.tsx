@@ -1,4 +1,4 @@
-export type BadgeVariant = "ok" | "warn" | "ai";
+import type { BadgeVariant } from "../../types";
 
 export const VerifyBadge = ({
   variant,
@@ -6,11 +6,4 @@ export const VerifyBadge = ({
 }: {
   variant: BadgeVariant;
   children: React.ReactNode;
-}) => (
-  <div
-    className={`auth-badge ${variant} check-pop`}
-    style={{ width: 66, height: 66, borderRadius: 20, margin: "0 auto 24px" }}
-  >
-    {children}
-  </div>
-);
+}) => <div className={`auth-badge lg ${variant} check-pop`}>{children}</div>;

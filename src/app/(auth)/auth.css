@@ -169,6 +169,13 @@
       border: 1px solid color-mix(in oklab, var(--danger) 32%, transparent);
     }
 
+    &.lg {
+      width: 66px;
+      height: 66px;
+      border-radius: 20px;
+      margin: 0 auto 24px;
+    }
+
     &.check-pop {
       animation: nx-pop 0.45s cubic-bezier(0.2, 1.2, 0.4, 1);
     }

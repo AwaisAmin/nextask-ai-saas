@@ -26,9 +26,9 @@ export const VerifySuccess = ({
         <ArrowRightIcon />
       </Link>
     </Button>
-    <div style={{ marginTop: 18, fontSize: "12.5px", color: "var(--text-3)" }}>
+    <p className="mt-[18px] text-[12.5px] text-(--text-3)">
       Redirecting you automatically in{" "}
-      <b style={{ color: "var(--text-1)" }}>{countdown}</b>s…
-    </div>
+      <b className="text-(--text-1)">{countdown}</b>s…
+    </p>
   </>
 );
