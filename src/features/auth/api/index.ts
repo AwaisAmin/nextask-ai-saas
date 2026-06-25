@@ -1,17 +1,12 @@
 import apiClient from "@/lib/api/client";
 import type { ApiResponse } from "@/types/api";
-import type { User } from "@/types/user";
+import type { AuthData } from "../types";
 import type {
   LoginInput,
   RegisterInput,
   PasswordResetRequestInput,
   PasswordResetConfirmInput,
 } from "../schemas";
-
-export interface AuthData {
-  user: User;
-  access: string;
-}
 
 export const loginApi = (data: LoginInput) =>
   apiClient.post<ApiResponse<AuthData>>("/api/v1/auth/login/", data);

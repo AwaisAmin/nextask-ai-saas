@@ -17,17 +17,7 @@ export const LogoutButton = () => {
   return (
     <button
       onClick={handleLogout}
-      style={{
-        marginTop: "8px",
-        padding: "10px 22px",
-        borderRadius: "10px",
-        background: "var(--bg-2)",
-        border: "1px solid var(--border-2)",
-        color: "var(--text-1)",
-        fontSize: "14px",
-        fontWeight: 600,
-        cursor: "pointer",
-      }}
+      className="mt-2 px-5.5 py-2.5 rounded-[10px] bg-(--bg-2) border border-(--border-2) text-sm font-semibold text-(--text-1) cursor-pointer hover:bg-(--bg-3) transition-colors"
     >
       Sign out
     </button>

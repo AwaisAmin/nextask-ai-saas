@@ -1,7 +1,11 @@
+export { AlertCircleIcon } from "./AlertCircleIcon";
 export { ArrowRightIcon } from "./ArrowRightIcon";
 export { CheckIcon } from "./CheckIcon";
+export { ChevronLeftIcon } from "./ChevronLeftIcon";
 export { GitHubIcon } from "./GitHubIcon";
 export { GoogleIcon } from "./GoogleIcon";
+export { LockIcon } from "./LockIcon";
+export { MailIcon } from "./MailIcon";
 export { OutlineIcon } from "./OutlineIcon";
 export { PlayIcon } from "./PlayIcon";
 export { SparkIcon } from "./SparkIcon";
