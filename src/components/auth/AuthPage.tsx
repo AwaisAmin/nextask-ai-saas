@@ -103,24 +103,24 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
                 error={errors.email?.message}
                 {...register("email")}
               />
-              <div className="relative">
-                <Input
-                  label="Password"
-                  type="password"
-                  placeholder="••••••••"
-                  autoComplete={isSignup ? "new-password" : "current-password"}
-                  error={errors.password?.message}
-                  {...register("password")}
-                />
-                {!isSignup && (
+              <Input
+                label="Password"
+                type="password"
+                placeholder="••••••••"
+                autoComplete={isSignup ? "new-password" : "current-password"}
+                error={errors.password?.message}
+                {...register("password")}
+              />
+              {!isSignup && (
+                <div className="flex justify-end -mt-2 mb-3">
                   <Link
                     href="/password-reset"
-                    className="absolute right-0 top-0 text-[12.5px] text-(--text-3) hover:text-(--text-1) transition-colors"
+                    className="text-[12.5px] font-medium text-(--primary) hover:opacity-75 transition-opacity"
                   >
                     Forgot password?
                   </Link>
-                )}
-              </div>
+                </div>
+              )}
               {isSignup && (
                 <Input
                   label="Confirm password"

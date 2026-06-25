@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 export default async function ResetPasswordPage({
   searchParams,
 }: {
-  searchParams: Promise<{ token?: string }>;
+  searchParams: Promise<{ token?: string; email?: string }>;
 }) {
-  const { token } = await searchParams;
+  const { token, email } = await searchParams;
 
   if (!token) redirect("/password-reset");
 
@@ -21,7 +21,7 @@ export default async function ResetPasswordPage({
     <div className="auth">
       <AuthLeft tag={AUTH_LEFT_TAG.resetPassword} />
       <div className="auth-right">
-        <PasswordResetConfirmClient token={token} />
+        <PasswordResetConfirmClient token={token} email={email} />
       </div>
     </div>
   );

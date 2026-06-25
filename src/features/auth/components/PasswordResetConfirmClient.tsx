@@ -16,7 +16,13 @@ import { handleApiError } from "@/lib/api/handle-error";
 
 type FormValues = Omit<PasswordResetConfirmInput, "token">;
 
-export const PasswordResetConfirmClient = ({ token }: { token: string }) => {
+export const PasswordResetConfirmClient = ({
+  token,
+  email,
+}: {
+  token: string;
+  email?: string;
+}) => {
   const {
     register,
     handleSubmit,
@@ -50,7 +56,16 @@ export const PasswordResetConfirmClient = ({ token }: { token: string }) => {
         <LockIcon size={28} />
       </div>
       <h1 className="auth-title">{C.confirm.title}</h1>
-      <p className="auth-sub">{C.confirm.subtitle}</p>
+      <p className="auth-sub">
+        {email ? (
+          <>
+            Resetting the password for <b>{email}</b>. Make it at least 8
+            characters.
+          </>
+        ) : (
+          C.confirm.subtitle
+        )}
+      </p>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useVerifyEmail, useResendVerification } from "@/features/auth/hooks";
 import { handleApiError } from "@/lib/api/handle-error";
+import { setSessionCookie } from "@/lib/session";
 import { VerifyNoToken } from "./verify/VerifyNoToken";
 import { VerifyLoading } from "./verify/VerifyLoading";
 import { VerifySuccess } from "./verify/VerifySuccess";
@@ -21,11 +22,12 @@ export const VerifyEmailClient = ({
   const router = useRouter();
   const { isLoading, isSuccess, isError } = useVerifyEmail(token);
   const resendMutation = useResendVerification();
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(10);
   const [resendDone, setResendDone] = useState(false);
 
   useEffect(() => {
     if (!isSuccess) return;
+    setSessionCookie();
     const interval = setInterval(() => {
       setCountdown((n) => {
         if (n <= 1) {
