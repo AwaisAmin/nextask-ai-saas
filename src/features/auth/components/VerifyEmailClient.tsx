@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useVerifyEmail, useResendVerification } from "@/features/auth/hooks";
 import { handleApiError } from "@/lib/api/handle-error";
 import { setSessionCookie } from "@/lib/session";
+import { clearPendingEmail, getPendingEmail } from "@/lib/pending-email";
 import { VerifyNoToken } from "./verify/VerifyNoToken";
 import { VerifyLoading } from "./verify/VerifyLoading";
 import { VerifySuccess } from "./verify/VerifySuccess";
@@ -14,7 +15,7 @@ import { VerifyResent } from "./verify/VerifyResent";
 
 export const VerifyEmailClient = ({
   token,
-  email,
+  email: emailParam,
 }: {
   token?: string;
   email?: string;
@@ -24,6 +25,13 @@ export const VerifyEmailClient = ({
   const resendMutation = useResendVerification();
   const [countdown, setCountdown] = useState(10);
   const [resendDone, setResendDone] = useState(false);
+  const [email] = useState<string | undefined>(
+    () => getPendingEmail() ?? emailParam,
+  );
+
+  useEffect(() => {
+    clearPendingEmail();
+  }, []);
 
   useEffect(() => {
     if (!isSuccess) return;

@@ -115,7 +115,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
                 <div className="flex justify-end -mt-2 mb-3">
                   <Link
                     href="/password-reset"
-                    className="text-[12.5px] font-medium text-(--primary) hover:opacity-75 transition-opacity"
+                    className="text-[12.5px] font-semibold tracking-[0.012em] text-(--primary) hover:opacity-75 transition-opacity duration-200"
                   >
                     Forgot password?
                   </Link>

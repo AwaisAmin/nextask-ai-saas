@@ -1,5 +1,6 @@
 import apiClient from "@/lib/api/client";
 import type { ApiResponse } from "@/types/api";
+import type { User } from "@/types/user";
 import type { AuthData } from "../types";
 import type {
   LoginInput,

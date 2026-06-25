@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth.store";
 import { setSessionCookie } from "@/lib/session";
+import { setPendingEmail } from "@/lib/pending-email";
 import {
   loginApi,
   registerApi,
@@ -25,11 +26,22 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (data: LoginInput) => loginApi(data),
     onSuccess: ({ data: res }) => {
-      if (res.success) {
-        setAuth(res.data.user, res.data.access);
-        setSessionCookie();
-        router.push("/dashboard");
+      if (!res.success) return;
+
+      const { user, tokens } = res.data;
+
+      if (!user.is_verified) {
+        toast.warning("Please verify your email before signing in.", {
+          description: `We sent a link to ${user.email}. Check your inbox.`,
+        });
+        setPendingEmail(user.email);
+        router.push("/verify-email");
+        return;
       }
+
+      setAuth(user, tokens.access_token);
+      setSessionCookie();
+      router.push("/dashboard");
     },
   });
 };
@@ -39,8 +51,9 @@ export const useRegister = () => {
 
   return useMutation({
     mutationFn: (data: RegisterInput) => registerApi(data),
-    onSuccess: ({ data: res }) => {
+    onSuccess: ({ data: res }, variables) => {
       if (res.success) {
+        setPendingEmail(variables.email);
         router.push("/verify-email");
       }
     },
