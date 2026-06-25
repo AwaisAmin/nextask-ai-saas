@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import type { LoginInput, RegisterInput } from "@/features/auth/schemas";
 import { useLogin, useRegister } from "@/features/auth/hooks";
 import { AuthLeft } from "./AuthLeft";
 import { AuthLoader } from "@/components/loaders/AuthLoader";
+import { PasswordStrength } from "@/features/auth/components/PasswordStrength";
 import type { AuthMode, AuthFormValues } from "./types";
 
 export const AuthPage = ({ mode }: { mode: AuthMode }) => {
@@ -24,17 +25,20 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
     register,
     handleSubmit,
     setError,
+    control,
     formState: { errors },
   } = useForm<AuthFormValues>({
     resolver: zodResolver(isSignup ? registerSchema : loginSchema),
   });
+
+  const password = useWatch({ control, name: "password", defaultValue: "" });
 
   const loginMutation = useLogin();
   const registerMutation = useRegister();
   const [isNavigating, setIsNavigating] = useState(false);
   const isPending = loginMutation.isPending || registerMutation.isPending;
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: AuthFormValues) => {
     try {
       if (isSignup) {
         await registerMutation.mutateAsync(values as RegisterInput);
@@ -107,6 +111,7 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
                 error={errors.password?.message}
                 {...register("password")}
               />
+              {isSignup && <PasswordStrength password={password} />}
               {!isSignup && (
                 <div className="flex justify-end -mt-2 mb-3">
                   <Link
@@ -116,16 +121,6 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
                     Forgot password?
                   </Link>
                 </div>
-              )}
-              {isSignup && (
-                <Input
-                  label="Confirm password"
-                  type="password"
-                  placeholder="••••••••"
-                  autoComplete="new-password"
-                  error={errors.confirm_password?.message}
-                  {...register("confirm_password")}
-                />
               )}
               <Button
                 type="submit"

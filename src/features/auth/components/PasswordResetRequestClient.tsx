@@ -75,7 +75,7 @@ export const PasswordResetRequestClient = () => {
           </button>
           {resendCooldown > 0 && (
             <span>
-              in <b className="text-primary">{resendCooldown}s</b>
+              in <b className="text-(--text-1)">{resendCooldown}</b>s
             </span>
           )}
         </div>

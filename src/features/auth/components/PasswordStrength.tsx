@@ -31,7 +31,7 @@ export const PasswordStrength = ({ password }: { password: string }) => {
           ? STRENGTH_LABELS[score]
           : "Use 8+ characters with a mix of letters, numbers & symbols."}
       </div>
-      <ul className="req-list">
+      <ul className="req-list mb-4">
         {PASSWORD_REQUIREMENTS.map(({ key, label }) => (
           <li key={key} className={checks[key] ? "met" : ""}>
             <span className="rc">
