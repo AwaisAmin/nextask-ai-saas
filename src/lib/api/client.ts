@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { useAuthStore } from "@/store/auth.store";
+import { clearSessionCookie } from "@/lib/session";
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -78,6 +79,7 @@ apiClient.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null);
         useAuthStore.getState().clearAuth();
+        clearSessionCookie();
         window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {

@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { VERIFY_EMAIL_CONTENT as C } from "@/constants/auth";
-import { useVerifyEmail } from "@/features/auth/hooks";
+import { useVerifyEmail, useResendVerification } from "@/features/auth/hooks";
+import { handleApiError } from "@/lib/api/handle-error";
 import { Button } from "@/components/ui/button";
 
 const CheckIcon = () => (
@@ -85,13 +86,28 @@ const ArrowIcon = () => (
   </svg>
 );
 
-export const VerifyEmailClient = ({ token }: { token?: string }) => {
+const BackLink = () => (
+  <div style={{ display: "flex", justifyContent: "center" }}>
+    <a className="back-link" href="/login">
+      <BackChevron />
+      {C.error.back}
+    </a>
+  </div>
+);
+
+export const VerifyEmailClient = ({
+  token,
+  email,
+}: {
+  token?: string;
+  email?: string;
+}) => {
   const router = useRouter();
   const { isLoading, isSuccess, isError } = useVerifyEmail(token);
+  const resendMutation = useResendVerification();
+
   const [countdown, setCountdown] = useState(5);
-  const [resendState, setResendState] = useState<"idle" | "sending" | "resent">(
-    "idle",
-  );
+  const [resendDone, setResendDone] = useState(false);
 
   useEffect(() => {
     if (!isSuccess) return;
@@ -99,7 +115,7 @@ export const VerifyEmailClient = ({ token }: { token?: string }) => {
       setCountdown((n) => {
         if (n <= 1) {
           clearInterval(interval);
-          router.push("/login");
+          router.push("/dashboard");
         }
         return n - 1;
       });
@@ -107,15 +123,19 @@ export const VerifyEmailClient = ({ token }: { token?: string }) => {
     return () => clearInterval(interval);
   }, [isSuccess, router]);
 
-  const handleResend = () => {
-    setResendState("sending");
-    // TODO: wire up resend API when endpoint is available
-    setTimeout(() => setResendState("resent"), 900);
+  const handleResend = async () => {
+    if (!email) return;
+    try {
+      await resendMutation.mutateAsync(email);
+      setResendDone(true);
+    } catch (err) {
+      handleApiError(err);
+    }
   };
 
   return (
     <div className="verify-stage">
-      <div className="verify-stage-glow" />
+      <div className="glow" />
 
       <Link
         href="/"
@@ -126,7 +146,7 @@ export const VerifyEmailClient = ({ token }: { token?: string }) => {
       </Link>
 
       <div className="verify-card">
-        {/* ── No token: check inbox ─────────────────────────────── */}
+        {/* ── No token ─────────────────────────────────────────── */}
         {!token && (
           <>
             <div
@@ -137,23 +157,19 @@ export const VerifyEmailClient = ({ token }: { token?: string }) => {
             </div>
             <h1 className="auth-title">{C.noToken.title}</h1>
             <p className="auth-sub">{C.noToken.subtitle}</p>
-            <a className="back-link" href="/login">
-              <BackChevron />
-              {C.noToken.back}
-            </a>
+            <BackLink />
           </>
         )}
 
         {/* ── Verifying ─────────────────────────────────────────── */}
         {token && isLoading && (
           <>
-            <div className="verify-ring" />
+            <div className="ring" />
             <h1 className="auth-title" style={{ fontSize: 24 }}>
               {C.loading.title}
             </h1>
             <p className="auth-sub" style={{ marginBottom: 0 }}>
-              Hang tight while we confirm your address. This only takes a
-              moment.
+              {C.loading.subtitle}
             </p>
           </>
         )}
@@ -173,22 +189,31 @@ export const VerifyEmailClient = ({ token }: { token?: string }) => {
               <CheckIcon />
             </div>
             <h1 className="auth-title">{C.success.title}</h1>
-            <p className="auth-sub">{C.success.subtitle}</p>
+            <p className="auth-sub">
+              Your address {email ? <b>{email}</b> : "your email"} is confirmed.
+              Your NexTask workspace is ready to go.
+            </p>
             <Button asChild variant="primary" className="w-full justify-center">
-              <Link href="/login">
+              <Link href="/dashboard">
                 {C.success.cta}
                 <ArrowIcon />
               </Link>
             </Button>
-            <div className="mt-4 text-[12.5px] text-(--text-3)">
+            <div
+              style={{
+                marginTop: 18,
+                fontSize: "12.5px",
+                color: "var(--text-3)",
+              }}
+            >
               Redirecting you automatically in{" "}
-              <b className="text-(--text-1)">{countdown}</b>s…
+              <b style={{ color: "var(--text-1)" }}>{countdown}</b>s…
             </div>
           </>
         )}
 
-        {/* ── Expired / error ───────────────────────────────────── */}
-        {token && isError && resendState === "idle" && (
+        {/* ── Expired ───────────────────────────────────────────── */}
+        {token && isError && !resendDone && (
           <>
             <div
               className="auth-badge warn"
@@ -202,33 +227,31 @@ export const VerifyEmailClient = ({ token }: { token?: string }) => {
               <WarnIcon />
             </div>
             <h1 className="auth-title">{C.error.title}</h1>
-            <p className="auth-sub">{C.error.subtitle}</p>
+            <p className="auth-sub">
+              {C.error.subtitle}
+              {email && (
+                <>
+                  {" "}
+                  We&apos;ll resend it to <b>{email}</b>.
+                </>
+              )}
+            </p>
             <Button
               variant="primary"
               className="w-full justify-center"
               onClick={handleResend}
+              disabled={resendMutation.isPending}
             >
-              Resend verification email
+              {resendMutation.isPending
+                ? "Sending…"
+                : "Resend verification email"}
             </Button>
-            <a className="back-link" href="/login">
-              <BackChevron />
-              {C.noToken.back}
-            </a>
-          </>
-        )}
-
-        {/* ── Resending ─────────────────────────────────────────── */}
-        {token && isError && resendState === "sending" && (
-          <>
-            <div className="verify-ring" />
-            <p className="auth-sub" style={{ marginBottom: 0 }}>
-              Sending a new link…
-            </p>
+            <BackLink />
           </>
         )}
 
         {/* ── Resent ────────────────────────────────────────────── */}
-        {token && isError && resendState === "resent" && (
+        {token && isError && resendDone && (
           <>
             <div
               className="auth-badge ai check-pop"
@@ -243,13 +266,11 @@ export const VerifyEmailClient = ({ token }: { token?: string }) => {
             </div>
             <h1 className="auth-title">{C.noToken.title}</h1>
             <p className="auth-sub">
-              We sent a new verification link to your email. It may take a
-              minute to arrive.
+              We sent a new verification link to{" "}
+              {email ? <b>{email}</b> : "your email"}. It may take a minute to
+              arrive.
             </p>
-            <a className="back-link" href="/login">
-              <BackChevron />
-              {C.noToken.back}
-            </a>
+            <BackLink />
           </>
         )}
       </div>

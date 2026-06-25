@@ -26,16 +26,18 @@ export const VERIFY_EMAIL_CONTENT = {
   },
   loading: {
     title: "Verifying your email…",
+    subtitle:
+      "Hang tight while we confirm your address. This only takes a moment.",
   },
   success: {
-    title: "Email verified!",
-    subtitle: "Your account is ready. Sign in to get started.",
-    cta: "Sign in",
+    title: "Email verified",
+    cta: "Continue to NexTask",
   },
   error: {
-    title: "Verification failed",
-    subtitle: "The link may have expired or already been used.",
-    back: "Back to register",
+    title: "This link has expired",
+    subtitle:
+      "Verification links are valid for 24 hours. No problem — we can send you a fresh one.",
+    back: "Back to sign in",
   },
 } as const;
 

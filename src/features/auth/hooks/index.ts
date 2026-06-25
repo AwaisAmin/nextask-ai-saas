@@ -2,12 +2,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth.store";
+import { setSessionCookie } from "@/lib/session";
 import {
   loginApi,
   registerApi,
   verifyEmailApi,
   requestPasswordResetApi,
   confirmPasswordResetApi,
+  resendVerificationApi,
 } from "../api";
 import type {
   LoginInput,
@@ -25,7 +27,8 @@ export const useLogin = () => {
     onSuccess: ({ data: res }) => {
       if (res.success) {
         setAuth(res.data.user, res.data.access);
-        router.push("/");
+        setSessionCookie();
+        router.push("/dashboard");
       }
     },
   });
@@ -57,6 +60,11 @@ export const useRequestPasswordReset = () =>
   useMutation({
     mutationFn: (data: PasswordResetRequestInput) =>
       requestPasswordResetApi(data),
+  });
+
+export const useResendVerification = () =>
+  useMutation({
+    mutationFn: (email: string) => resendVerificationApi(email),
   });
 
 export const useConfirmPasswordReset = () => {

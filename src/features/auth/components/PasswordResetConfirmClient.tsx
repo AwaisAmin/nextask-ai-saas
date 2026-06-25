@@ -123,58 +123,57 @@ export const PasswordResetConfirmClient = ({ token }: { token: string }) => {
           {...register("new_password")}
         />
 
-        {/* Strength bars */}
-        {newPassword.length > 0 && (
-          <>
-            <div className="strength">
-              {[0, 1, 2, 3].map((i) => (
-                <i
-                  key={i}
-                  style={{
-                    background:
-                      i < score ? STRENGTH_COLORS[score] : "var(--bg-4)",
-                  }}
-                />
-              ))}
-            </div>
-            <div
-              className="strength-label"
+        {/* Strength bars — always visible */}
+        <div className="strength">
+          {[0, 1, 2, 3].map((i) => (
+            <i
+              key={i}
               style={{
-                color: newPassword ? STRENGTH_COLORS[score] : "var(--text-2)",
+                background:
+                  newPassword.length > 0 && i < score
+                    ? STRENGTH_COLORS[score]
+                    : "var(--bg-4)",
               }}
-            >
-              {newPassword
-                ? STRENGTH_LABELS[score]
-                : "Use 8+ characters with a mix of letters, numbers & symbols."}
-            </div>
-            <ul className="req-list">
-              <li className={checks.len ? "met" : ""}>
-                <span className="rc">
-                  <ReqCheck />
-                </span>
-                8+ characters
-              </li>
-              <li className={checks.case ? "met" : ""}>
-                <span className="rc">
-                  <ReqCheck />
-                </span>
-                Upper &amp; lowercase
-              </li>
-              <li className={checks.num ? "met" : ""}>
-                <span className="rc">
-                  <ReqCheck />
-                </span>
-                A number
-              </li>
-              <li className={checks.sym ? "met" : ""}>
-                <span className="rc">
-                  <ReqCheck />
-                </span>
-                A symbol
-              </li>
-            </ul>
-          </>
-        )}
+            />
+          ))}
+        </div>
+        <div
+          className="strength-label"
+          style={{
+            color:
+              newPassword.length > 0 ? STRENGTH_COLORS[score] : "var(--text-2)",
+          }}
+        >
+          {newPassword.length > 0
+            ? STRENGTH_LABELS[score]
+            : "Use 8+ characters with a mix of letters, numbers & symbols."}
+        </div>
+        <ul className="req-list">
+          <li className={checks.len ? "met" : ""}>
+            <span className="rc">
+              <ReqCheck />
+            </span>
+            8+ characters
+          </li>
+          <li className={checks.case ? "met" : ""}>
+            <span className="rc">
+              <ReqCheck />
+            </span>
+            Upper &amp; lowercase
+          </li>
+          <li className={checks.num ? "met" : ""}>
+            <span className="rc">
+              <ReqCheck />
+            </span>
+            A number
+          </li>
+          <li className={checks.sym ? "met" : ""}>
+            <span className="rc">
+              <ReqCheck />
+            </span>
+            A symbol
+          </li>
+        </ul>
 
         <Input
           label="Confirm password"

@@ -30,3 +30,8 @@ export const confirmPasswordResetApi = (data: PasswordResetConfirmInput) =>
     "/api/v1/auth/password-reset/confirm/",
     data,
   );
+
+export const resendVerificationApi = (email: string) =>
+  apiClient.post<ApiResponse<null>>("/api/v1/auth/resend-verification/", {
+    email,
+  });

@@ -75,7 +75,7 @@ export const PasswordResetRequestClient = () => {
   const mutation = useRequestPasswordReset();
 
   const startCooldown = () => {
-    setResendCooldown(30);
+    setResendCooldown(60);
   };
 
   useEffect(() => {
@@ -125,7 +125,9 @@ export const PasswordResetRequestClient = () => {
             {mutation.isPending ? "Sending…" : "Resend"}
           </button>
           {resendCooldown > 0 && (
-            <span className="text-(--text-3)">in {resendCooldown}s</span>
+            <span>
+              in <b style={{ color: "var(--primary)" }}>{resendCooldown}s</b>
+            </span>
           )}
         </div>
 
