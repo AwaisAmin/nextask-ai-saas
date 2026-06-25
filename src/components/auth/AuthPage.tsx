@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
 
   const loginMutation = useLogin();
   const registerMutation = useRegister();
+  const [isNavigating, setIsNavigating] = useState(false);
   const isPending = loginMutation.isPending || registerMutation.isPending;
 
   const onSubmit = async (values: FormValues) => {
@@ -47,6 +49,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
       } else {
         await loginMutation.mutateAsync(values as LoginInput);
       }
+      setIsNavigating(true);
     } catch (err) {
       handleApiError(err, setError);
     }
@@ -154,7 +157,7 @@ export const AuthPage = ({ mode }: { mode: Mode }) => {
         </div>
       </div>
 
-      <AuthLoader visible={isPending} />
+      <AuthLoader visible={isPending || isNavigating} />
     </>
   );
 };
