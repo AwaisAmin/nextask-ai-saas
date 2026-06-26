@@ -1,7 +1,7 @@
 import apiClient from "@/lib/api/client";
 import type { ApiResponse } from "@/types/api";
 import type { User } from "@/types/user";
-import type { AuthData } from "../types";
+import type { AuthData, SocialProvider } from "../types";
 import type {
   LoginInput,
   RegisterInput,
@@ -30,4 +30,14 @@ export const confirmPasswordResetApi = (data: PasswordResetConfirmInput) =>
 export const resendVerificationApi = (email: string) =>
   apiClient.post<ApiResponse<null>>("/api/v1/auth/resend-verification/", {
     email,
+  });
+
+export const socialAuthApi = (
+  provider: SocialProvider,
+  code: string,
+  redirectUri: string,
+) =>
+  apiClient.post<ApiResponse<AuthData>>(`/api/v1/auth/social/${provider}/`, {
+    code,
+    redirect_uri: redirectUri,
   });

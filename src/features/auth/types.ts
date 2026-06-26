@@ -28,3 +28,5 @@ export type PasswordRequirement = {
 };
 
 export type PasswordResetFormValues = Omit<PasswordResetConfirmInput, "token">;
+
+export type SocialProvider = "google" | "github";

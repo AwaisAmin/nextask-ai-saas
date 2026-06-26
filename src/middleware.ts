@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const PUBLIC_ROUTES = ["/", "/login", "/register", "/verify-email"];
 const PASSWORD_RESET_PREFIXES = ["/password-reset", "/reset-password"];
+const OAUTH_CALLBACK_PREFIX = "/callback";
 const DEFAULT_LOGIN = "/login";
 const DEFAULT_DASHBOARD = "/dashboard";
 
@@ -14,7 +15,8 @@ export function middleware(request: NextRequest) {
 
   const isPublicRoute =
     PUBLIC_ROUTES.includes(pathname) ||
-    PASSWORD_RESET_PREFIXES.some((p) => pathname.startsWith(p));
+    PASSWORD_RESET_PREFIXES.some((p) => pathname.startsWith(p)) ||
+    pathname.startsWith(OAUTH_CALLBACK_PREFIX);
 
   if (!hasSession && !isPublicRoute) {
     return NextResponse.redirect(new URL(DEFAULT_LOGIN, request.url));

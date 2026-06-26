@@ -15,6 +15,7 @@ import { useLogin, useRegister } from "@/features/auth/hooks";
 import { AuthLeft } from "./AuthLeft";
 import { AuthLoader } from "@/components/loaders/AuthLoader";
 import { PasswordStrength } from "@/features/auth/components/PasswordStrength";
+import { getGitHubOAuthUrl, getGoogleOAuthUrl } from "@/lib/oauth";
 import type { AuthMode, AuthFormValues } from "./types";
 
 export const AuthPage = ({ mode }: { mode: AuthMode }) => {
@@ -68,6 +69,7 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
               <Button
                 variant="secondary"
                 className="w-full justify-center text-[14.5px] py-3"
+                onClick={() => (window.location.href = getGoogleOAuthUrl())}
               >
                 <GoogleIcon size={17} />
                 Continue with Google
@@ -75,6 +77,7 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
               <Button
                 variant="secondary"
                 className="w-full justify-center text-[14.5px] py-3"
+                onClick={() => (window.location.href = getGitHubOAuthUrl())}
               >
                 <GitHubIcon size={17} />
                 Continue with GitHub

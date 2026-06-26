@@ -11,7 +11,9 @@ import {
   requestPasswordResetApi,
   confirmPasswordResetApi,
   resendVerificationApi,
+  socialAuthApi,
 } from "../api";
+import type { SocialProvider } from "../types";
 import type {
   LoginInput,
   RegisterInput,
@@ -79,6 +81,30 @@ export const useResendVerification = () =>
   useMutation({
     mutationFn: (email: string) => resendVerificationApi(email),
   });
+
+export const useSocialAuth = () => {
+  const router = useRouter();
+  const setAuth = useAuthStore((s) => s.setAuth);
+
+  return useMutation({
+    mutationFn: ({
+      provider,
+      code,
+      redirectUri,
+    }: {
+      provider: SocialProvider;
+      code: string;
+      redirectUri: string;
+    }) => socialAuthApi(provider, code, redirectUri),
+    onSuccess: ({ data: res }) => {
+      if (!res.success) return;
+      const { user, tokens } = res.data;
+      setAuth(user, tokens.access_token);
+      setSessionCookie();
+      router.push("/dashboard");
+    },
+  });
+};
 
 export const useConfirmPasswordReset = () => {
   const router = useRouter();
