@@ -3,46 +3,21 @@
 import { useRef, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { ArrowRightIcon } from "@/icons";
-import type { BuildConfig, OnboardingCtx, StepHandle } from "../types";
+import {
+  AI_BUILD_STEPS,
+  BLANK_BUILD_STEPS,
+  DEFAULT_CTX,
+  SKIP_LABELS,
+} from "@/constants/onboarding";
+import type { BuildConfig, Layer, OnboardingCtx, StepHandle } from "../types";
 import { OnboardingLeft } from "./OnboardingLeft";
+
+const noop = () => {};
 import { Stepper } from "./Stepper";
 import { BuildOverlay } from "./BuildOverlay";
 import { StepOrg } from "./steps/StepOrg";
 import { StepInvite } from "./steps/StepInvite";
 import { StepProject } from "./steps/StepProject";
-
-type Layer = {
-  key: string;
-  stepIndex: number;
-  animClass: "in-right" | "in-left" | "leaving";
-};
-
-const SKIP_LABELS: Record<number, string> = {
-  1: "Skip for now",
-  2: "Skip — start blank",
-};
-
-const AI_BUILD_STEPS = [
-  "Creating the project board",
-  "Generating starter tasks with AI",
-  "Assigning by skill & setting due dates",
-  "Writing your first daily standup",
-];
-
-const BLANK_BUILD_STEPS = ["Creating the project board"];
-
-const DEFAULT_CTX: OnboardingCtx = {
-  plan: "free",
-  org: {
-    name: "",
-    slug: "",
-    accent: "#7B61FF",
-    useCase: "product",
-    size: "2-10",
-  },
-  invites: [],
-  project: { name: "My Project", tplId: "blank" },
-};
 
 export const OnboardingPage = () => {
   const [stepIndex, setStepIndex] = useState(0);
@@ -121,7 +96,6 @@ export const OnboardingPage = () => {
   const progressPct = (stepIndex / 2) * 100;
 
   const renderStepContent = (index: number, isActive: boolean) => {
-    const noop = () => {};
     switch (index) {
       case 0:
         return (

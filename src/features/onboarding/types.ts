@@ -25,9 +25,15 @@ export interface StepHandle {
   getData(): Partial<OnboardingCtx> | null;
 }
 
+export type Layer = {
+  key: string;
+  stepIndex: number;
+  animClass: "in-right" | "in-left" | "leaving";
+};
+
 export type BuildConfig = {
   title: string;
-  steps: string[];
+  steps: readonly string[];
   destination: string;
 };
 

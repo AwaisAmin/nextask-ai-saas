@@ -9,30 +9,19 @@ import {
 } from "react";
 import { AlertTriangle, ChevronDown, Copy, Link2, Plus, X } from "lucide-react";
 import { CheckIcon } from "@/icons";
+import {
+  DEFAULT_INVITE_ROWS,
+  INVITE_ROLES,
+  PLAN_NAMES,
+  PLAN_SEATS,
+} from "@/constants/onboarding";
+import { isEmail } from "../../utils";
 import type {
   InviteRow,
-  MemberRole,
   OnboardingCtx,
   StepHandle,
   StepInviteCallbacks,
 } from "../../types";
-
-const PLAN_SEATS = { free: 5, pro: 50 };
-const PLAN_NAMES = { free: "Free", pro: "Pro" };
-
-const ROLES: { id: MemberRole; name: string; desc: string }[] = [
-  { id: "admin", name: "Admin", desc: "Manage members, billing & settings" },
-  { id: "member", name: "Member", desc: "Create and work on projects" },
-  { id: "viewer", name: "Viewer", desc: "Read-only access" },
-];
-
-const isEmail = (e: string) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
-
-const DEFAULT_ROWS: InviteRow[] = [
-  { email: "", role: "member" },
-  { email: "", role: "member" },
-  { email: "", role: "member" },
-];
 
 export const StepInvite = forwardRef<
   StepHandle,
@@ -40,7 +29,7 @@ export const StepInvite = forwardRef<
 >(({ ctx, onValidChange, onNextLabelChange }, ref) => {
   const orgName = ctx.org?.name || "your workspace";
   const [rows, setRows] = useState<InviteRow[]>(
-    ctx.invites?.length ? ctx.invites : DEFAULT_ROWS,
+    ctx.invites?.length ? ctx.invites : DEFAULT_INVITE_ROWS,
   );
   const [plan, setPlan] = useState(ctx.plan ?? "free");
   const [openMenu, setOpenMenu] = useState<number | null>(null);
@@ -166,7 +155,8 @@ export const StepInvite = forwardRef<
       {/* Invite rows */}
       <div className="invite-rows" ref={containerRef}>
         {rows.map((row, idx) => {
-          const roleInfo = ROLES.find((r) => r.id === row.role) ?? ROLES[1];
+          const roleInfo =
+            INVITE_ROLES.find((r) => r.id === row.role) ?? INVITE_ROLES[1];
           return (
             <div key={idx} className="invite-row">
               <input
@@ -190,7 +180,7 @@ export const StepInvite = forwardRef<
                 </button>
                 {openMenu === idx && (
                   <div className="role-menu">
-                    {ROLES.map((r) => (
+                    {INVITE_ROLES.map((r) => (
                       <button
                         key={r.id}
                         type="button"
@@ -239,9 +229,8 @@ export const StepInvite = forwardRef<
       </div>
       {showBulk && (
         <textarea
-          className="ob-input"
+          className="ob-input mt-2.5"
           placeholder="alex@acme.com, sara@acme.com, omar@acme.com"
-          style={{ marginTop: 10 }}
           onBlur={(e) => handleBulkBlur(e.target.value)}
           autoFocus
         />
@@ -258,7 +247,7 @@ export const StepInvite = forwardRef<
           <button type="button" className="copy-btn" onClick={copyInviteLink}>
             {copied ? (
               <>
-                <span style={{ color: "var(--ok)" }}>
+                <span className="text-(--ok)">
                   <CheckIcon size={14} strokeWidth={2.4} />
                 </span>
                 Copied

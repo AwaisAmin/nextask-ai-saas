@@ -2,92 +2,21 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Sparkles } from "lucide-react";
-import { CheckIcon } from "@/icons";
+import { CameraIcon, CheckIcon } from "@/icons";
+import {
+  ORG_ACCENTS,
+  ORG_LARGE_SIZES,
+  ORG_SIZES,
+  ORG_USE_CASES,
+} from "@/constants/onboarding";
+import { isSlugAvailable, slugify, toInitials } from "../../utils";
 import type {
   OnboardingCtx,
-  OrgUseCase,
   OrgSize,
+  OrgUseCase,
   StepHandle,
   StepOrgCallbacks,
 } from "../../types";
-
-const ACCENTS = [
-  "#7B61FF",
-  "#FF6B5C",
-  "#2FBF87",
-  "#F5A623",
-  "#3B9BFF",
-  "#E84CC4",
-] as const;
-
-const USE_CASES: { id: OrgUseCase; path: string; label: string }[] = [
-  {
-    id: "product",
-    path: "M3 3h18v6H3zM3 13h8v8H3zM15 13h6v8h-6z",
-    label: "Product & engineering",
-  },
-  {
-    id: "agency",
-    path: "M12 3l9 5-9 5-9-5zM3 13l9 5 9-5",
-    label: "Agency & clients",
-  },
-  {
-    id: "marketing",
-    path: "M3 11l18-7-7 18-2.5-7z",
-    label: "Marketing & content",
-  },
-  {
-    id: "ops",
-    path: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20",
-    label: "Operations & other",
-  },
-];
-
-const SIZES: { label: string; value: OrgSize }[] = [
-  { label: "Just me", value: "Just me" },
-  { label: "2–10", value: "2-10" },
-  { label: "11–50", value: "11-50" },
-  { label: "51–200", value: "51-200" },
-  { label: "200+", value: "200+" },
-];
-
-const LARGE_SIZES: OrgSize[] = ["11-50", "51-200", "200+"];
-const TAKEN = ["acme", "google", "test", "admin", "app", "nextask", "demo"];
-
-const slugify = (s: string) =>
-  s
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-
-const toInitials = (name: string) =>
-  (name || "N")
-    .split(/\s+/)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase() || "N";
-
-const slugOk = (s: string) => s.length >= 3 && !TAKEN.includes(s);
-
-const CameraIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="#fff"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M5 7h3l1.5-2h5L16 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z" />
-    <circle cx="12" cy="13" r="3.2" />
-  </svg>
-);
 
 export const StepOrg = forwardRef<
   StepHandle,
@@ -103,7 +32,7 @@ export const StepOrg = forwardRef<
 
   const computedSlug = slugEdited ? slugField : slugify(name);
   const isValid =
-    name.trim().length >= 2 && !!computedSlug && slugOk(computedSlug);
+    name.trim().length >= 2 && !!computedSlug && isSlugAvailable(computedSlug);
 
   useEffect(() => {
     onValidChange(isValid);
@@ -123,10 +52,6 @@ export const StepOrg = forwardRef<
     if (!slugEdited) setSlugField(slugify(val));
   };
 
-  const handleAccentChange = (color: string) => {
-    setAccent(color);
-  };
-
   const handleSlugChange = (val: string) => {
     setSlugEdited(true);
     setSlugField(val.toLowerCase().replace(/[^a-z0-9-]/g, ""));
@@ -136,7 +61,7 @@ export const StepOrg = forwardRef<
     ? null
     : computedSlug.length < 3
       ? "short"
-      : slugOk(computedSlug)
+      : isSlugAvailable(computedSlug)
         ? "ok"
         : "taken";
 
@@ -164,13 +89,13 @@ export const StepOrg = forwardRef<
           <div className="lt">Workspace logo</div>
           <div className="ls">Pick an accent — or upload later.</div>
           <div className="logo-pick">
-            {ACCENTS.map((c) => (
+            {ORG_ACCENTS.map((c) => (
               <button
                 key={c}
                 type="button"
                 className={`swatch${c === accent ? " sel" : ""}`}
                 style={{ background: c }}
-                onClick={() => handleAccentChange(c)}
+                onClick={() => setAccent(c)}
               />
             ))}
           </div>
@@ -230,7 +155,7 @@ export const StepOrg = forwardRef<
           </span>
         </label>
         <div className="opt-grid cols-2">
-          {USE_CASES.map((uc) => (
+          {ORG_USE_CASES.map((uc) => (
             <button
               key={uc.id}
               type="button"
@@ -258,7 +183,7 @@ export const StepOrg = forwardRef<
       <div className="ob-field">
         <label>How big is your team?</label>
         <div className="opt-grid cols-3">
-          {SIZES.map((s) => (
+          {ORG_SIZES.map((s) => (
             <button
               key={s.value}
               type="button"
@@ -269,7 +194,7 @@ export const StepOrg = forwardRef<
             </button>
           ))}
         </div>
-        {LARGE_SIZES.includes(size) && (
+        {ORG_LARGE_SIZES.includes(size) && (
           <div className="plan-hint show">
             <Sparkles size={14} />
             For a team this size, <b>Pro</b> is recommended — unlimited members

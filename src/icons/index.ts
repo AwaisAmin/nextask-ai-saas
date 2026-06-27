@@ -1,5 +1,6 @@
 export { AlertCircleIcon } from "./AlertCircleIcon";
 export { ArrowRightIcon } from "./ArrowRightIcon";
+export { CameraIcon } from "./CameraIcon";
 export { CheckIcon } from "./CheckIcon";
 export { ChevronLeftIcon } from "./ChevronLeftIcon";
 export { GitHubIcon } from "./GitHubIcon";
