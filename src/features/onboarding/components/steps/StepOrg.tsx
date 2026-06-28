@@ -8,6 +8,7 @@ import {
   ORG_LARGE_SIZES,
   ORG_SIZES,
   ORG_USE_CASES,
+  SLUG_PREFIX,
   SLUG_STATUS,
   SLUG_STATUS_LABELS,
 } from "@/constants/onboarding";
@@ -123,7 +124,7 @@ export const StepOrg = forwardRef<
           <span className="ob-hint">— where your team signs in</span>
         </label>
         <div className="slug-wrap">
-          <span className="slug-prefix">nextask.com/</span>
+          <span className="slug-prefix">{SLUG_PREFIX}</span>
           <input
             type="text"
             placeholder="acme-studio"

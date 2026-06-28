@@ -1,5 +1,9 @@
 export const API_VERSION = "/api/v1";
 
+export const APP_DOMAIN = (
+  process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+).replace(/^https?:\/\//, "");
+
 export const QUERY_STALE_TIME = 5 * 60 * 1000;
 export const QUERY_GC_TIME = 10 * 60 * 1000;
 

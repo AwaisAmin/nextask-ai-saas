@@ -1,3 +1,4 @@
+import { APP_DOMAIN } from "@/lib/constants";
 import type {
   InviteRow,
   MemberRole,
@@ -120,7 +121,8 @@ export const TAKEN_SLUGS = [
 
 // ── StepInvite ───────────────────────────────────────────────────────────────
 
-export const INVITE_LINK_BASE = "nextask.com/join/";
+export const SLUG_PREFIX = `${APP_DOMAIN}/`;
+export const INVITE_LINK_BASE = `${APP_DOMAIN}/join/`;
 export const INVITE_LINK_SUFFIX = "-x8f2";
 
 export const PLAN_SEATS: Record<string, number> = { free: 5, pro: 50 };
