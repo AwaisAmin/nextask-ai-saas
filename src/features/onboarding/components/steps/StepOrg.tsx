@@ -2,16 +2,23 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Sparkles } from "lucide-react";
-import { CameraIcon, CheckIcon } from "@/icons";
+import { CameraIcon, CheckIcon, PathIcon } from "@/icons";
 import {
   ORG_ACCENTS,
   ORG_LARGE_SIZES,
   ORG_SIZES,
   ORG_USE_CASES,
+  SLUG_STATUS,
+  SLUG_STATUS_LABELS,
 } from "@/constants/onboarding";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { isSlugAvailable, slugify, toInitials } from "../../utils";
+import {
+  getSlugStatus,
+  isSlugAvailable,
+  slugify,
+  toInitials,
+} from "../../utils";
 import type {
   OnboardingCtx,
   OrgSize,
@@ -27,17 +34,7 @@ const UseCaseOption = ({ uc, isSelected, onSelect }: UseCaseOptionProps) => (
     className={cn("ob-opt", isSelected && "sel")}
     onClick={onSelect}
   >
-    <svg
-      className="o-ic"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d={uc.path} />
-    </svg>
+    <PathIcon path={uc.path} className="o-ic" />
     {uc.label}
   </button>
 );
@@ -50,7 +47,7 @@ export const StepOrg = forwardRef<
   const [name, setName] = useState(o?.name ?? "");
   const [slugField, setSlugField] = useState(o?.slug ?? "");
   const [slugEdited, setSlugEdited] = useState(!!o?.slug);
-  const [accent, setAccent] = useState(o?.accent ?? "#7B61FF");
+  const [accent, setAccent] = useState(o?.accent ?? ORG_ACCENTS[0]);
   const [useCase, setUseCase] = useState<OrgUseCase>(o?.useCase ?? "product");
   const [size, setSize] = useState<OrgSize>(o?.size ?? "2-10");
 
@@ -81,13 +78,7 @@ export const StepOrg = forwardRef<
     setSlugField(val.toLowerCase().replace(/[^a-z0-9-]/g, ""));
   };
 
-  const slugStatus = !computedSlug
-    ? null
-    : computedSlug.length < 3
-      ? "short"
-      : isSlugAvailable(computedSlug)
-        ? "ok"
-        : "taken";
+  const slugStatus = getSlugStatus(computedSlug);
 
   const logoStyle = {
     background: `linear-gradient(145deg, ${accent}, color-mix(in oklab, ${accent} 50%, #000))`,
@@ -153,18 +144,20 @@ export const StepOrg = forwardRef<
           />
           <span
             className={cn("slug-status", {
-              ok: slugStatus === "ok",
-              bad: slugStatus === "short" || slugStatus === "taken",
+              ok: slugStatus === SLUG_STATUS.OK,
+              bad:
+                slugStatus === SLUG_STATUS.SHORT ||
+                slugStatus === SLUG_STATUS.TAKEN,
             })}
           >
-            {slugStatus === "ok" && (
+            {slugStatus === SLUG_STATUS.OK && (
               <>
                 <CheckIcon size={13} strokeWidth={2.6} />
-                available
+                {SLUG_STATUS_LABELS.ok}
               </>
             )}
-            {slugStatus === "short" && "too short"}
-            {slugStatus === "taken" && "taken"}
+            {slugStatus === SLUG_STATUS.SHORT && SLUG_STATUS_LABELS.short}
+            {slugStatus === SLUG_STATUS.TAKEN && SLUG_STATUS_LABELS.taken}
           </span>
         </div>
       </div>

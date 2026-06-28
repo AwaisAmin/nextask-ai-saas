@@ -8,12 +8,39 @@ import type {
   UseCase,
 } from "@/features/onboarding/types";
 
+// ── Slug field ───────────────────────────────────────────────────────────────
+
+export const SLUG_STATUS = {
+  OK: "ok",
+  SHORT: "short",
+  TAKEN: "taken",
+} as const;
+
+export const SLUG_STATUS_LABELS = {
+  ok: "available",
+  short: "too short",
+  taken: "taken",
+} as const;
+
+// ── Timing ───────────────────────────────────────────────────────────────────
+
+export const ANIM_DURATION_MS = 320;
+export const COPIED_RESET_MS = 1500;
+
 // ── OnboardingPage ────────────────────────────────────────────────────────────
+
+export const STEP_COUNT = 3;
+export const INVITE_STEP_INDEX = 1;
+export const PROJECT_STEP_INDEX = 2;
 
 export const SKIP_LABELS: Record<number, string> = {
   1: "Skip for now",
   2: "Skip — start blank",
 };
+
+export const BUILD_TITLE_BLANK = "Setting up your project…";
+export const BUILD_TITLE_AI = "Building your workspace…";
+export const ONBOARDING_DESTINATION = "/organizations";
 
 export const AI_BUILD_STEPS = [
   "Creating the project board",
@@ -91,7 +118,10 @@ export const TAKEN_SLUGS = [
   "demo",
 ];
 
-// ── StepInvite ────────────────────────────────────────────────────────────────
+// ── StepInvite ───────────────────────────────────────────────────────────────
+
+export const INVITE_LINK_BASE = "nextask.com/join/";
+export const INVITE_LINK_SUFFIX = "-x8f2";
 
 export const PLAN_SEATS: Record<string, number> = { free: 5, pro: 50 };
 
@@ -109,7 +139,11 @@ export const DEFAULT_INVITE_ROWS: InviteRow[] = [
   { email: "", role: "member" },
 ];
 
-// ── StepProject ───────────────────────────────────────────────────────────────
+// ── StepProject ──────────────────────────────────────────────────────────────
+
+export const TEMPLATE_RECOMMENDED_LABEL = "Recommended";
+export const TEMPLATE_EMPTY_LABEL = "Empty board";
+export const TEMPLATE_AI_TASKS_LABEL = "AI tasks included";
 
 export const PROJECT_TEMPLATES: Template[] = [
   {

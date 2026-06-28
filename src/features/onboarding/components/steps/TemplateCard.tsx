@@ -2,6 +2,11 @@
 
 import { Sparkles } from "lucide-react";
 import { CheckIcon } from "@/icons";
+import {
+  TEMPLATE_AI_TASKS_LABEL,
+  TEMPLATE_EMPTY_LABEL,
+  TEMPLATE_RECOMMENDED_LABEL,
+} from "@/constants/onboarding";
 import { cn } from "@/lib/utils";
 import type { TemplateCardProps } from "../../types";
 
@@ -16,7 +21,9 @@ export const TemplateCard = ({
     className={cn("tpl-card", isSelected && "sel")}
     onClick={onSelect}
   >
-    {isRecommended && <span className="t-rec">Recommended</span>}
+    {isRecommended && (
+      <span className="t-rec">{TEMPLATE_RECOMMENDED_LABEL}</span>
+    )}
     <span className="t-check">
       <CheckIcon size={12} strokeWidth={3} />
     </span>
@@ -35,10 +42,10 @@ export const TemplateCard = ({
       {t.tasks > 0 ? (
         <>
           <Sparkles size={12} />
-          {t.tasks} AI tasks included
+          {t.tasks} {TEMPLATE_AI_TASKS_LABEL}
         </>
       ) : (
-        "Empty board"
+        TEMPLATE_EMPTY_LABEL
       )}
     </div>
   </button>

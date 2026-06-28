@@ -5,9 +5,16 @@ import { ChevronRight } from "lucide-react";
 import { ArrowRightIcon } from "@/icons";
 import {
   AI_BUILD_STEPS,
+  ANIM_DURATION_MS,
   BLANK_BUILD_STEPS,
+  BUILD_TITLE_AI,
+  BUILD_TITLE_BLANK,
   DEFAULT_CTX,
+  INVITE_STEP_INDEX,
+  ONBOARDING_DESTINATION,
+  PROJECT_STEP_INDEX,
   SKIP_LABELS,
+  STEP_COUNT,
 } from "@/constants/onboarding";
 import { Button } from "@/components/ui/button";
 import type { BuildConfig, Layer, OnboardingCtx, StepHandle } from "../types";
@@ -45,20 +52,20 @@ export const OnboardingPage = () => {
       },
     ]);
     setStepIndex(newIndex);
-    setIsNextEnabled(newIndex === 1); // invite step is always valid
+    setIsNextEnabled(newIndex === INVITE_STEP_INDEX);
     setNextLabel("Continue");
 
     setTimeout(() => {
       setLayers((prev) => prev.filter((l) => l.animClass !== "leaving"));
-    }, 320);
+    }, ANIM_DURATION_MS);
   };
 
   const showBuild = (finalCtx: OnboardingCtx) => {
     const isBlank = finalCtx.project.tplId === "blank";
     setBuildConfig({
-      title: isBlank ? "Setting up your project…" : "Building your workspace…",
+      title: isBlank ? BUILD_TITLE_BLANK : BUILD_TITLE_AI,
       steps: isBlank ? BLANK_BUILD_STEPS : AI_BUILD_STEPS,
-      destination: "/organizations",
+      destination: ONBOARDING_DESTINATION,
     });
   };
 
@@ -67,7 +74,7 @@ export const OnboardingPage = () => {
     if (data === null) return;
     const newCtx = { ...ctx, ...(data ?? {}) };
     setCtx(newCtx);
-    if (stepIndex < 2) navigate(stepIndex + 1);
+    if (stepIndex < PROJECT_STEP_INDEX) navigate(stepIndex + 1);
     else showBuild(newCtx);
   };
 
@@ -113,7 +120,7 @@ export const OnboardingPage = () => {
   };
 
   const skipLabel = SKIP_LABELS[stepIndex];
-  const progressPct = (stepIndex / 2) * 100;
+  const progressPct = (stepIndex / (STEP_COUNT - 1)) * 100;
 
   return (
     <>

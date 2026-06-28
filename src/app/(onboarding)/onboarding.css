@@ -327,12 +327,6 @@
     }
   }
 
-  textarea.ob-input {
-    resize: vertical;
-    min-height: 84px;
-    line-height: 1.5;
-  }
-
   /* Slug field */
   .slug-wrap {
     display: flex;
@@ -650,32 +644,10 @@
     gap: 10px;
     margin-bottom: 10px;
 
-    & .ob-input {
+    & > div:first-child {
       flex: 1;
+      min-width: 0;
     }
-  }
-
-  .role-select {
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  .role-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 13px;
-    border-radius: 11px;
-    background: var(--bg-2);
-    border: 1px solid var(--border-2);
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--text-1);
-    white-space: nowrap;
-    min-width: 112px;
-    justify-content: space-between;
-    cursor: pointer;
-    font-family: inherit;
   }
 
   .role-menu {
@@ -690,23 +662,6 @@
     padding: 5px;
     min-width: 230px;
     animation: ob-pop 0.14s ease;
-  }
-
-  .role-opt {
-    display: flex;
-    gap: 10px;
-    padding: 9px 10px;
-    border-radius: 9px;
-    text-align: left;
-    width: 100%;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: inherit;
-
-    &:hover {
-      background: var(--bg-3);
-    }
   }
 
   .rname {

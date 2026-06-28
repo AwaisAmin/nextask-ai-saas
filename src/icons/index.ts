@@ -8,5 +8,6 @@ export { GoogleIcon } from "./GoogleIcon";
 export { LockIcon } from "./LockIcon";
 export { MailIcon } from "./MailIcon";
 export { OutlineIcon } from "./OutlineIcon";
+export { PathIcon } from "./PathIcon";
 export { PlayIcon } from "./PlayIcon";
 export { SparkIcon } from "./SparkIcon";

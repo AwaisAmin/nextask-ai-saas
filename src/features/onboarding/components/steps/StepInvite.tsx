@@ -1,23 +1,23 @@
 "use client";
 
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { AlertTriangle, ChevronDown, Copy, Link2, Plus, X } from "lucide-react";
 import { CheckIcon } from "@/icons";
 import { Button } from "@/components/ui/button";
+import { Dropdown } from "@/components/ui/dropdown";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import {
+  COPIED_RESET_MS,
   DEFAULT_INVITE_ROWS,
+  INVITE_LINK_BASE,
+  INVITE_LINK_SUFFIX,
   INVITE_ROLES,
   PLAN_NAMES,
   PLAN_SEATS,
 } from "@/constants/onboarding";
-import { isEmail } from "../../utils";
+import { getSeatbarColor, isEmail } from "../../utils";
 import type {
   InviteRow,
   OnboardingCtx,
@@ -34,7 +34,6 @@ export const StepInvite = forwardRef<
     ctx.invites?.length ? ctx.invites : DEFAULT_INVITE_ROWS,
   );
   const [plan, setPlan] = useState(ctx.plan ?? "free");
-  const [openMenu, setOpenMenu] = useState<number | null>(null);
   const [showBulk, setShowBulk] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -85,31 +84,13 @@ export const StepInvite = forwardRef<
   };
 
   const copyInviteLink = () => {
-    const link = `nextask.com/join/${ctx.org?.slug || "workspace"}-x8f2`;
+    const link = `${INVITE_LINK_BASE}${ctx.org?.slug || "workspace"}${INVITE_LINK_SUFFIX}`;
     navigator.clipboard?.writeText(link).catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    setTimeout(() => setCopied(false), COPIED_RESET_MS);
   };
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const close = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setOpenMenu(null);
-      }
-    };
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, []);
-
-  const fillColor = isOver
-    ? "var(--danger)"
-    : isFull
-      ? "var(--warn)"
-      : "var(--primary)";
+  const fillColor = getSeatbarColor(isOver, isFull);
 
   return (
     <>
@@ -152,52 +133,45 @@ export const StepInvite = forwardRef<
       </div>
 
       {/* Invite rows */}
-      <div className="invite-rows" ref={containerRef}>
+      <div className="invite-rows">
         {rows.map((row, idx) => {
           const roleInfo =
             INVITE_ROLES.find((r) => r.id === row.role) ?? INVITE_ROLES[1];
           return (
             <div key={idx} className="invite-row">
-              <input
-                className="ob-input"
+              <Input
                 type="email"
                 placeholder="name@company.com"
                 value={row.email}
                 onChange={(e) => updateRow(idx, { email: e.target.value })}
               />
-              <div className="role-select">
-                <button
-                  type="button"
-                  className="role-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpenMenu(openMenu === idx ? null : idx);
-                  }}
-                >
-                  {roleInfo.name}
-                  <ChevronDown size={14} />
-                </button>
-                {openMenu === idx && (
-                  <div className="role-menu">
-                    {INVITE_ROLES.map((r) => (
-                      <button
-                        key={r.id}
-                        type="button"
-                        className="role-opt"
-                        onClick={() => {
-                          updateRow(idx, { role: r.id });
-                          setOpenMenu(null);
-                        }}
-                      >
-                        <div>
-                          <div className="rname">{r.name}</div>
-                          <div className="rdesc">{r.desc}</div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+              <Dropdown
+                trigger={(toggle) => (
+                  <Button
+                    variant="ghost"
+                    className="h-auto p-[13px] rounded-[11px] text-[13.5px] text-(--text-1) gap-[7px] min-w-[112px] justify-between whitespace-nowrap"
+                    onClick={toggle}
+                  >
+                    {roleInfo.name}
+                    <ChevronDown size={14} />
+                  </Button>
                 )}
-              </div>
+                menuClassName="role-menu"
+              >
+                {INVITE_ROLES.map((r) => (
+                  <Button
+                    key={r.id}
+                    variant="ghost"
+                    className="w-full justify-start items-start text-left bg-transparent border-0 rounded-[9px] py-[9px] px-[10px] h-auto whitespace-normal"
+                    onClick={() => updateRow(idx, { role: r.id })}
+                  >
+                    <div>
+                      <div className="rname">{r.name}</div>
+                      <div className="rdesc">{r.desc}</div>
+                    </div>
+                  </Button>
+                ))}
+              </Dropdown>
               <Button
                 variant="ghost"
                 className={cn(
@@ -234,9 +208,10 @@ export const StepInvite = forwardRef<
         </Button>
       </div>
       {showBulk && (
-        <textarea
-          className="ob-input mt-2.5"
+        <Textarea
+          className="mt-2.5"
           placeholder="alex@acme.com, sara@acme.com, omar@acme.com"
+          rows={4}
           onBlur={(e) => handleBulkBlur(e.target.value)}
           autoFocus
         />
@@ -249,7 +224,11 @@ export const StepInvite = forwardRef<
           Or share an invite link
         </div>
         <div className="ilc-row">
-          <code>nextask.com/join/{ctx.org?.slug || "workspace"}-x8f2</code>
+          <code>
+            {INVITE_LINK_BASE}
+            {ctx.org?.slug || "workspace"}
+            {INVITE_LINK_SUFFIX}
+          </code>
           <Button
             variant="ghost"
             className="gap-1.5 text-[13px] px-3.5 py-0 self-stretch rounded-[9px] bg-(--bg-3) hover:bg-(--bg-4) shrink-0"
