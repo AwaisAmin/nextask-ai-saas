@@ -117,25 +117,6 @@
     flex-shrink: 0;
   }
 
-  .ob-skip {
-    font-size: 13.5px;
-    color: var(--text-2);
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: color 0.15s;
-    text-decoration: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-
-    &:hover {
-      color: var(--text-0);
-    }
-  }
-
   .ob-stage {
     flex: 1;
     min-height: 0;
@@ -566,65 +547,6 @@
     }
   }
 
-  /* ── Action buttons ──────────────────────────────────────────────────────── */
-
-  .ob-btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    font-weight: 600;
-    border-radius: 12px;
-    background: var(--primary);
-    color: var(--primary-ink);
-    padding: 14px 22px;
-    font-size: 15px;
-    box-shadow: 0 8px 22px -8px var(--primary);
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    font-family: inherit;
-    transition:
-      transform 0.2s ease-out,
-      box-shadow 0.2s ease-out;
-
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 32px -8px var(--primary);
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-      box-shadow: none;
-    }
-  }
-
-  .ob-btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    font-weight: 600;
-    border-radius: 12px;
-    background: var(--bg-2);
-    border: 1px solid var(--border-2);
-    color: var(--text-0);
-    padding: 14px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.15s;
-    white-space: nowrap;
-
-    &:hover {
-      background: var(--bg-3);
-    }
-    &[hidden] {
-      display: none;
-    }
-  }
-
   /* ── Seat bar (invite step) ──────────────────────────────────────────────── */
 
   .seatbar {
@@ -713,24 +635,6 @@
     }
     & b {
       color: var(--text-0);
-    }
-  }
-
-  .so-btn {
-    flex-shrink: 0;
-    padding: 8px 14px;
-    border-radius: 9px;
-    background: var(--primary);
-    color: var(--primary-ink);
-    font-size: 12.5px;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    box-shadow: 0 6px 16px -6px var(--primary);
-
-    &:hover {
-      filter: brightness(1.08);
     }
   }
 

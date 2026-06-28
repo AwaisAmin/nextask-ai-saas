@@ -9,6 +9,7 @@ import {
   ORG_SIZES,
   ORG_USE_CASES,
 } from "@/constants/onboarding";
+import { Input } from "@/components/ui/input";
 import { isSlugAvailable, slugify, toInitials } from "../../utils";
 import type {
   OnboardingCtx,
@@ -103,18 +104,14 @@ export const StepOrg = forwardRef<
       </div>
 
       {/* Org name */}
-      <div className="ob-field">
-        <label htmlFor="ob-org-name">Organization name</label>
-        <input
-          id="ob-org-name"
-          className="ob-input"
-          type="text"
-          placeholder="Acme Studio"
-          value={name}
-          autoFocus
-          onChange={(e) => handleNameChange(e.target.value)}
-        />
-      </div>
+      <Input
+        label="Organization name"
+        type="text"
+        placeholder="Acme Studio"
+        value={name}
+        autoFocus
+        onChange={(e) => handleNameChange(e.target.value)}
+      />
 
       {/* Workspace URL / slug */}
       <div className="ob-field">

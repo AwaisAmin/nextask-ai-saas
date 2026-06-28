@@ -9,6 +9,7 @@ import {
 } from "react";
 import { AlertTriangle, ChevronDown, Copy, Link2, Plus, X } from "lucide-react";
 import { CheckIcon } from "@/icons";
+import { Button } from "@/components/ui/button";
 import {
   DEFAULT_INVITE_ROWS,
   INVITE_ROLES,
@@ -90,8 +91,6 @@ export const StepInvite = forwardRef<
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const upgradeToPro = () => setPlan("pro");
-
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const close = (e: MouseEvent) => {
@@ -145,9 +144,9 @@ export const StepInvite = forwardRef<
                 as pending invites — upgrade to Pro to activate them.
               </span>
             </div>
-            <button type="button" className="so-btn" onClick={upgradeToPro}>
+            <Button variant="primary" size="sm" onClick={() => setPlan("pro")}>
               Upgrade to Pro
-            </button>
+            </Button>
           </div>
         )}
       </div>

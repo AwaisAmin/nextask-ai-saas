@@ -7,6 +7,7 @@ import {
   DEFAULT_PROJECT_NAMES,
   PROJECT_TEMPLATES,
 } from "@/constants/onboarding";
+import { Input } from "@/components/ui/input";
 import { getRecommendedTemplate } from "../../utils";
 import type {
   OnboardingCtx,
@@ -75,21 +76,17 @@ export const StepProject = forwardRef<
         tasks. Edit everything after.
       </p>
 
-      <div className="ob-field">
-        <label htmlFor="ob-proj-name">Project name</label>
-        <input
-          id="ob-proj-name"
-          className="ob-input"
-          type="text"
-          placeholder="Website Redesign"
-          value={projectName}
-          autoFocus
-          onChange={(e) => {
-            setProjectName(e.target.value);
-            setNameEdited(true);
-          }}
-        />
-      </div>
+      <Input
+        label="Project name"
+        type="text"
+        placeholder="Website Redesign"
+        value={projectName}
+        autoFocus
+        onChange={(e) => {
+          setProjectName(e.target.value);
+          setNameEdited(true);
+        }}
+      />
 
       <label className="text-[13px] font-semibold text-(--text-1) block mb-2.5">
         Start from a template

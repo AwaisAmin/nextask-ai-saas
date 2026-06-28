@@ -9,15 +9,16 @@ import {
   DEFAULT_CTX,
   SKIP_LABELS,
 } from "@/constants/onboarding";
+import { Button } from "@/components/ui/button";
 import type { BuildConfig, Layer, OnboardingCtx, StepHandle } from "../types";
 import { OnboardingLeft } from "./OnboardingLeft";
-
-const noop = () => {};
 import { Stepper } from "./Stepper";
 import { BuildOverlay } from "./BuildOverlay";
 import { StepOrg } from "./steps/StepOrg";
 import { StepInvite } from "./steps/StepInvite";
 import { StepProject } from "./steps/StepProject";
+
+const noop = () => {};
 
 export const OnboardingPage = () => {
   const [stepIndex, setStepIndex] = useState(0);
@@ -33,7 +34,7 @@ export const OnboardingPage = () => {
 
   const navigate = (newIndex: number) => {
     const forward = newIndex > stepIndex;
-    const enterClass: "in-right" | "in-left" = forward ? "in-right" : "in-left";
+    const enterClass: Layer["animClass"] = forward ? "in-right" : "in-left";
 
     setLayers((prev) => [
       ...prev.map((l) => ({ ...l, animClass: "leaving" as const })),
@@ -44,7 +45,7 @@ export const OnboardingPage = () => {
       },
     ]);
     setStepIndex(newIndex);
-    setIsNextEnabled(newIndex === 1); // invite is always valid
+    setIsNextEnabled(newIndex === 1); // invite step is always valid
     setNextLabel("Continue");
 
     setTimeout(() => {
@@ -64,19 +65,10 @@ export const OnboardingPage = () => {
   const handleNext = () => {
     const data = stepRef.current?.getData();
     if (data === null) return;
-
     const newCtx = { ...ctx, ...(data ?? {}) };
     setCtx(newCtx);
-
-    if (stepIndex < 2) {
-      navigate(stepIndex + 1);
-    } else {
-      showBuild(newCtx);
-    }
-  };
-
-  const handleBack = () => {
-    if (stepIndex > 0) navigate(stepIndex - 1);
+    if (stepIndex < 2) navigate(stepIndex + 1);
+    else showBuild(newCtx);
   };
 
   const handleSkip = () => {
@@ -92,41 +84,36 @@ export const OnboardingPage = () => {
     }
   };
 
+  const renderStep = (index: number, isActive: boolean) => {
+    const ref = isActive ? stepRef : null;
+    const onValidChange = isActive ? setIsNextEnabled : noop;
+    const onNextLabelChange = isActive ? setNextLabel : noop;
+
+    const steps: Record<number, React.ReactNode> = {
+      0: <StepOrg ref={ref} ctx={ctx} onValidChange={onValidChange} />,
+      1: (
+        <StepInvite
+          ref={ref}
+          ctx={ctx}
+          onValidChange={onValidChange}
+          onNextLabelChange={onNextLabelChange}
+        />
+      ),
+      2: (
+        <StepProject
+          ref={ref}
+          ctx={ctx}
+          onValidChange={onValidChange}
+          onNextLabelChange={onNextLabelChange}
+        />
+      ),
+    };
+
+    return steps[index] ?? null;
+  };
+
   const skipLabel = SKIP_LABELS[stepIndex];
   const progressPct = (stepIndex / 2) * 100;
-
-  const renderStepContent = (index: number, isActive: boolean) => {
-    switch (index) {
-      case 0:
-        return (
-          <StepOrg
-            ref={isActive ? stepRef : null}
-            ctx={ctx}
-            onValidChange={isActive ? setIsNextEnabled : noop}
-          />
-        );
-      case 1:
-        return (
-          <StepInvite
-            ref={isActive ? stepRef : null}
-            ctx={ctx}
-            onValidChange={isActive ? setIsNextEnabled : noop}
-            onNextLabelChange={isActive ? setNextLabel : noop}
-          />
-        );
-      case 2:
-        return (
-          <StepProject
-            ref={isActive ? stepRef : null}
-            ctx={ctx}
-            onValidChange={isActive ? setIsNextEnabled : noop}
-            onNextLabelChange={isActive ? setNextLabel : noop}
-          />
-        );
-      default:
-        return null;
-    }
-  };
 
   return (
     <>
@@ -134,57 +121,56 @@ export const OnboardingPage = () => {
         <OnboardingLeft />
 
         <main className="ob-right">
-          {/* Top bar: stepper + skip */}
           <div className="ob-top">
             <Stepper current={stepIndex} />
             {skipLabel ? (
-              <button type="button" className="ob-skip" onClick={handleSkip}>
-                <span>{skipLabel}</span>
+              <Button
+                variant="link"
+                className="text-(--text-2) text-[13.5px] gap-1.5 font-semibold"
+                onClick={handleSkip}
+              >
+                {skipLabel}
                 <ChevronRight size={14} />
-              </button>
+              </Button>
             ) : (
               <span />
             )}
           </div>
 
-          {/* Animated step stage */}
           <div className="ob-stage">
             <div className="ob-viewport">
               {layers.map((layer) => (
                 <div key={layer.key} className={`step-view ${layer.animClass}`}>
-                  {renderStepContent(
-                    layer.stepIndex,
-                    layer.animClass !== "leaving",
-                  )}
+                  {renderStep(layer.stepIndex, layer.animClass !== "leaving")}
                 </div>
               ))}
             </div>
 
-            {/* Action bar */}
             <div className="ob-actionbar">
               <div className="ob-action-inner">
-                <button
-                  type="button"
-                  className="ob-btn-ghost"
-                  onClick={handleBack}
-                  hidden={stepIndex === 0}
-                >
-                  Back
-                </button>
-                <button
-                  type="button"
-                  className="ob-btn-primary"
+                {stepIndex > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="md"
+                    onClick={() => navigate(stepIndex - 1)}
+                  >
+                    Back
+                  </Button>
+                )}
+                <Button
+                  variant="primary"
+                  size="md"
+                  className="flex-1"
                   disabled={!isNextEnabled}
                   onClick={handleNext}
                 >
                   <ArrowRightIcon size={16} />
                   {nextLabel}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
 
-          {/* Progress bar */}
           <div className="ob-progress-track">
             <div className="ob-progress" style={{ width: `${progressPct}%` }} />
           </div>

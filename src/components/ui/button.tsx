@@ -4,16 +4,18 @@ import { Slot } from "radix-ui";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 font-semibold tracking-[0.012em] whitespace-nowrap cursor-pointer select-none transition-[transform,box-shadow,filter,background,border-color] duration-200 ease-out outline-none focus-visible:ring-2 focus-visible:ring-ring/60 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  // Split durations match original: transform/filter/bg .15s, box-shadow .2s
+  // Using [transform:...] on hover (not translate-y) so transition:transform picks it up
+  "inline-flex shrink-0 items-center justify-center gap-2 font-semibold tracking-[0.012em] whitespace-nowrap cursor-pointer select-none [transition:transform_0.15s_ease,box-shadow_0.2s_ease,filter_0.15s_ease,background_0.15s_ease,border-color_0.15s_ease] outline-none focus-visible:ring-2 focus-visible:ring-ring/60 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         // ── NexTask core ──────────────────────────────────────────────
         primary:
-          "bg-primary text-(--primary-ink) rounded-xl [box-shadow:0_8px_24px_-8px_var(--primary)] hover:-translate-y-0.5 hover:[box-shadow:0_14px_34px_-8px_var(--primary)]",
+          "bg-primary text-(--primary-ink) rounded-xl [box-shadow:0_8px_22px_-8px_var(--primary)] hover:[transform:translateY(-2px)] hover:[box-shadow:0_14px_32px_-8px_var(--primary)] disabled:[box-shadow:none]",
         ghost:
-          "bg-transparent text-(--text-0) rounded-xl border border-(--border-2) hover:bg-(--bg-2) hover:border-(--text-3)",
-        ai: "rounded-xl text-[#1a0e06] font-bold [background:linear-gradient(110deg,var(--ai-a),var(--ai-b))] [box-shadow:var(--ai-glow)] hover:-translate-y-0.5 hover:brightness-105",
+          "bg-(--bg-2) text-(--text-0) rounded-xl border border-(--border-2) hover:bg-(--bg-3)",
+        ai: "rounded-xl text-[#1a0e06] font-bold [background:linear-gradient(110deg,var(--ai-a),var(--ai-b))] [box-shadow:var(--ai-glow)] hover:[transform:translateY(-2px)] hover:brightness-105",
         // ── App UI (forms, dialogs, destructive) ──────────────────────
         secondary:
           "bg-(--bg-2) text-(--text-0) rounded-xl border border-(--border-2) hover:bg-(--bg-3)",
