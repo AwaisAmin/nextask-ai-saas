@@ -64,8 +64,9 @@ export const StepOrg = forwardRef<
   };
 
   const handleSlugChange = (val: string) => {
-    setSlugEdited(true);
-    setSlugField(val.toLowerCase().replace(/[^a-z0-9-]/g, ""));
+    const cleaned = val.toLowerCase().replace(/[^a-z0-9-]/g, "");
+    setSlugEdited(!!cleaned);
+    setSlugField(cleaned);
   };
 
   const slugStatus = getSlugStatus(computedSlug);
