@@ -65,12 +65,6 @@ export type TemplateCardProps = {
   onSelect: () => void;
 };
 
-export type UseCaseOptionProps = {
-  uc: UseCase;
-  isSelected: boolean;
-  onSelect: () => void;
-};
-
 // ── Step callback types ───────────────────────────────────────────────────────
 
 export type StepOrgCallbacks = {

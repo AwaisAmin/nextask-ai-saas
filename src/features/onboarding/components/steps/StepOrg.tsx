@@ -11,6 +11,7 @@ import {
   SLUG_STATUS,
   SLUG_STATUS_LABELS,
 } from "@/constants/onboarding";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
@@ -25,19 +26,7 @@ import type {
   OrgUseCase,
   StepHandle,
   StepOrgCallbacks,
-  UseCaseOptionProps,
 } from "../../types";
-
-const UseCaseOption = ({ uc, isSelected, onSelect }: UseCaseOptionProps) => (
-  <button
-    type="button"
-    className={cn("ob-opt", isSelected && "sel")}
-    onClick={onSelect}
-  >
-    <PathIcon path={uc.path} className="o-ic" />
-    {uc.label}
-  </button>
-);
 
 export const StepOrg = forwardRef<
   StepHandle,
@@ -105,10 +94,10 @@ export const StepOrg = forwardRef<
           <div className="ls">Pick an accent — or upload later.</div>
           <div className="logo-pick">
             {ORG_ACCENTS.map((c) => (
-              <button
+              <Button
                 key={c}
-                type="button"
-                className={cn("swatch", c === accent && "sel")}
+                variant="swatch"
+                data-selected={c === accent}
                 style={{ background: c }}
                 onClick={() => setAccent(c)}
               />
@@ -172,12 +161,21 @@ export const StepOrg = forwardRef<
         </label>
         <div className="opt-grid cols-2">
           {ORG_USE_CASES.map((uc) => (
-            <UseCaseOption
+            <Button
               key={uc.id}
-              uc={uc}
-              isSelected={uc.id === useCase}
-              onSelect={() => setUseCase(uc.id)}
-            />
+              variant="option"
+              data-selected={uc.id === useCase}
+              onClick={() => setUseCase(uc.id)}
+            >
+              <PathIcon
+                path={uc.path}
+                className="o-ic"
+                style={{
+                  color: uc.id === useCase ? "var(--primary)" : undefined,
+                }}
+              />
+              {uc.label}
+            </Button>
           ))}
         </div>
       </div>
@@ -187,14 +185,15 @@ export const StepOrg = forwardRef<
         <label>How big is your team?</label>
         <div className="opt-grid cols-3">
           {ORG_SIZES.map((s) => (
-            <button
+            <Button
               key={s.value}
-              type="button"
-              className={cn("ob-opt center", s.value === size && "sel")}
+              variant="option"
+              data-selected={s.value === size}
+              className="justify-center"
               onClick={() => setSize(s.value)}
             >
               {s.label}
-            </button>
+            </Button>
           ))}
         </div>
         {ORG_LARGE_SIZES.includes(size) && (

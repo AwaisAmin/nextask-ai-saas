@@ -22,6 +22,12 @@ const buttonVariants = cva(
         destructive:
           "bg-transparent text-(--danger) rounded-xl border border-(--danger) hover:bg-(--danger)/10",
         link: "text-primary underline-offset-4 hover:underline p-0 h-auto",
+        // ── Selection tile (opt grids) ────────────────────────────────
+        option:
+          "bg-(--bg-2) border border-(--border) rounded-[12px] justify-start text-left hover:border-(--border-2) data-[selected=true]:bg-(--primary-soft) data-[selected=true]:border-(--primary-line) data-[selected=true]:text-(--text-0)",
+        // ── Color swatch picker ───────────────────────────────────────
+        swatch:
+          "rounded-[7px] border-2 border-transparent hover:scale-110 data-[selected=true]:border-(--text-0)",
       },
       size: {
         sm: "py-2    px-3.5  text-sm    rounded-[10px]",
@@ -31,6 +37,18 @@ const buttonVariants = cva(
         "icon-sm": "size-7 rounded-lg [&_svg:not([class*='size-'])]:size-3.5",
       },
     },
+    // compoundVariants run after variant+size in the cva output, so these win tailwind-merge
+    compoundVariants: [
+      {
+        variant: "option",
+        class:
+          "text-(--text-1) font-medium py-3 px-[13px] text-[13.5px] gap-[10px]",
+      },
+      {
+        variant: "swatch",
+        class: "size-[22px] p-0",
+      },
+    ],
     defaultVariants: {
       variant: "primary",
       size: "md",
