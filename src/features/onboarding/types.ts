@@ -37,6 +37,41 @@ export type BuildConfig = {
   destination: string;
 };
 
+// ── Derived entity shapes (explicit — avoids circular dep with constants) ─────
+
+export type Template = {
+  id: TemplateId;
+  emoji: string;
+  color: string;
+  name: string;
+  desc: string;
+  tasks: number;
+  for: OrgUseCase[];
+};
+
+export type UseCase = {
+  id: OrgUseCase;
+  path: string;
+  label: string;
+};
+
+// ── Component prop types ──────────────────────────────────────────────────────
+
+export type TemplateCardProps = {
+  template: Template;
+  isSelected: boolean;
+  isRecommended: boolean;
+  onSelect: () => void;
+};
+
+export type UseCaseOptionProps = {
+  uc: UseCase;
+  isSelected: boolean;
+  onSelect: () => void;
+};
+
+// ── Step callback types ───────────────────────────────────────────────────────
+
 export type StepOrgCallbacks = {
   onValidChange: (valid: boolean) => void;
 };

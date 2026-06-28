@@ -10,6 +10,7 @@ import {
   ORG_USE_CASES,
 } from "@/constants/onboarding";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { isSlugAvailable, slugify, toInitials } from "../../utils";
 import type {
   OnboardingCtx,
@@ -17,7 +18,29 @@ import type {
   OrgUseCase,
   StepHandle,
   StepOrgCallbacks,
+  UseCaseOptionProps,
 } from "../../types";
+
+const UseCaseOption = ({ uc, isSelected, onSelect }: UseCaseOptionProps) => (
+  <button
+    type="button"
+    className={cn("ob-opt", isSelected && "sel")}
+    onClick={onSelect}
+  >
+    <svg
+      className="o-ic"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d={uc.path} />
+    </svg>
+    {uc.label}
+  </button>
+);
 
 export const StepOrg = forwardRef<
   StepHandle,
@@ -94,7 +117,7 @@ export const StepOrg = forwardRef<
               <button
                 key={c}
                 type="button"
-                className={`swatch${c === accent ? " sel" : ""}`}
+                className={cn("swatch", c === accent && "sel")}
                 style={{ background: c }}
                 onClick={() => setAccent(c)}
               />
@@ -129,7 +152,10 @@ export const StepOrg = forwardRef<
             onChange={(e) => handleSlugChange(e.target.value)}
           />
           <span
-            className={`slug-status${slugStatus === "ok" ? " ok" : slugStatus ? " bad" : ""}`}
+            className={cn("slug-status", {
+              ok: slugStatus === "ok",
+              bad: slugStatus === "short" || slugStatus === "taken",
+            })}
           >
             {slugStatus === "ok" && (
               <>
@@ -153,25 +179,12 @@ export const StepOrg = forwardRef<
         </label>
         <div className="opt-grid cols-2">
           {ORG_USE_CASES.map((uc) => (
-            <button
+            <UseCaseOption
               key={uc.id}
-              type="button"
-              className={`ob-opt${uc.id === useCase ? " sel" : ""}`}
-              onClick={() => setUseCase(uc.id)}
-            >
-              <svg
-                className="o-ic"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d={uc.path} />
-              </svg>
-              {uc.label}
-            </button>
+              uc={uc}
+              isSelected={uc.id === useCase}
+              onSelect={() => setUseCase(uc.id)}
+            />
           ))}
         </div>
       </div>
@@ -184,7 +197,7 @@ export const StepOrg = forwardRef<
             <button
               key={s.value}
               type="button"
-              className={`ob-opt center${s.value === size ? " sel" : ""}`}
+              className={cn("ob-opt center", s.value === size && "sel")}
               onClick={() => setSize(s.value)}
             >
               {s.label}

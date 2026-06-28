@@ -1,14 +1,19 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { Sparkles } from "lucide-react";
-import { CheckIcon } from "@/icons";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import {
   DEFAULT_PROJECT_NAMES,
   PROJECT_TEMPLATES,
 } from "@/constants/onboarding";
 import { Input } from "@/components/ui/input";
 import { getRecommendedTemplate } from "../../utils";
+import { TemplateCard } from "./TemplateCard";
 import type {
   OnboardingCtx,
   StepHandle,
@@ -23,8 +28,12 @@ export const StepProject = forwardRef<
   const useCase = ctx.org?.useCase ?? "product";
   const recId = getRecommendedTemplate(useCase);
 
-  const sortedTemplates = [...PROJECT_TEMPLATES].sort(
-    (a, b) => (b.id === recId ? 1 : 0) - (a.id === recId ? 1 : 0),
+  const sortedTemplates = useMemo(
+    () =>
+      [...PROJECT_TEMPLATES].sort(
+        (a, b) => (b.id === recId ? 1 : 0) - (a.id === recId ? 1 : 0),
+      ),
+    [recId],
   );
 
   const [selectedId, setSelectedId] = useState<TemplateId>(
@@ -88,44 +97,19 @@ export const StepProject = forwardRef<
         }}
       />
 
-      <label className="text-[13px] font-semibold text-(--text-1) block mb-2.5">
+      <p className="text-[13px] font-semibold text-(--text-1) mb-2.5 mt-1">
         Start from a template
-      </label>
+      </p>
 
       <div className="tpl-grid">
         {sortedTemplates.map((t) => (
-          <button
+          <TemplateCard
             key={t.id}
-            type="button"
-            className={`tpl-card${t.id === selectedId ? " sel" : ""}`}
-            onClick={() => selectTemplate(t.id)}
-          >
-            {t.id === recId && <span className="t-rec">Recommended</span>}
-            <span className="t-check">
-              <CheckIcon size={12} strokeWidth={3} />
-            </span>
-            <span
-              className="t-ic"
-              style={{
-                background: `color-mix(in oklab, ${t.color} 16%, transparent)`,
-                color: t.color,
-              }}
-            >
-              {t.emoji}
-            </span>
-            <div className="t-name">{t.name}</div>
-            <div className="t-desc">{t.desc}</div>
-            <div className="t-meta">
-              {t.tasks > 0 ? (
-                <>
-                  <Sparkles size={12} />
-                  {t.tasks} AI tasks included
-                </>
-              ) : (
-                "Empty board"
-              )}
-            </div>
-          </button>
+            template={t}
+            isSelected={t.id === selectedId}
+            isRecommended={t.id === recId}
+            onSelect={() => selectTemplate(t.id)}
+          />
         ))}
       </div>
     </>

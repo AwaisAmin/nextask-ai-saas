@@ -10,6 +10,7 @@ import {
 import { AlertTriangle, ChevronDown, Copy, Link2, Plus, X } from "lucide-react";
 import { CheckIcon } from "@/icons";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   DEFAULT_INVITE_ROWS,
   INVITE_ROLES,
@@ -63,9 +64,8 @@ export const StepInvite = forwardRef<
     },
   }));
 
-  const updateRow = (idx: number, patch: Partial<InviteRow>) => {
+  const updateRow = (idx: number, patch: Partial<InviteRow>) =>
     setRows((prev) => prev.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
-  };
 
   const addRow = () =>
     setRows((prev) => [...prev, { email: "", role: "member" }]);
@@ -120,12 +120,12 @@ export const StepInvite = forwardRef<
       </p>
 
       {/* Seat bar */}
-      <div className={`seatbar${isOver ? " over" : isFull ? " warn" : ""}`}>
+      <div className={cn("seatbar", { over: isOver, warn: isFull && !isOver })}>
         <div className="seatbar-head">
           <span className="sb-label">
             <span>{used}</span> of <span>{seats}</span> seats used
           </span>
-          <span className={`sb-plan${plan === "pro" ? " pro" : ""}`}>
+          <span className={cn("sb-plan", plan === "pro" && "pro")}>
             {PLAN_NAMES[plan as keyof typeof PLAN_NAMES]} plan
           </span>
         </div>
@@ -198,33 +198,40 @@ export const StepInvite = forwardRef<
                   </div>
                 )}
               </div>
-              <button
-                type="button"
-                className="row-remove"
+              <Button
+                variant="ghost"
+                className={cn(
+                  "w-[38px] h-[46px] rounded-[10px] border-0 text-(--text-3) hover:text-(--danger) hover:bg-(--bg-2) shrink-0",
+                  rows.length <= 1 && "invisible",
+                )}
                 disabled={rows.length <= 1}
                 onClick={() => removeRow(idx)}
               >
                 <X size={17} />
-              </button>
+              </Button>
             </div>
           );
         })}
       </div>
 
-      <button type="button" className="add-row-btn" onClick={addRow}>
+      <Button
+        variant="link"
+        className="gap-2 text-[13.5px] py-2 px-1"
+        onClick={addRow}
+      >
         <Plus size={16} />
         Add another
-      </button>
+      </Button>
 
       <div className="bulk-toggle-row">
         <span>Got a list?</span>
-        <button
-          type="button"
-          className="bulk-link"
+        <Button
+          variant="link"
+          className="text-[13px]"
           onClick={() => setShowBulk((v) => !v)}
         >
           Paste multiple emails
-        </button>
+        </Button>
       </div>
       {showBulk && (
         <textarea
@@ -243,7 +250,11 @@ export const StepInvite = forwardRef<
         </div>
         <div className="ilc-row">
           <code>nextask.com/join/{ctx.org?.slug || "workspace"}-x8f2</code>
-          <button type="button" className="copy-btn" onClick={copyInviteLink}>
+          <Button
+            variant="ghost"
+            className="gap-1.5 text-[13px] px-3.5 py-0 self-stretch rounded-[9px] bg-(--bg-3) hover:bg-(--bg-4) shrink-0"
+            onClick={copyInviteLink}
+          >
             {copied ? (
               <>
                 <span className="text-(--ok)">
@@ -257,7 +268,7 @@ export const StepInvite = forwardRef<
                 Copy
               </>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </>

@@ -720,48 +720,6 @@
     margin-top: 1px;
   }
 
-  .row-remove {
-    width: 38px;
-    height: 46px;
-    display: grid;
-    place-items: center;
-    border-radius: 10px;
-    color: var(--text-3);
-    flex-shrink: 0;
-    transition:
-      color 0.15s,
-      background 0.15s;
-    background: none;
-    border: none;
-    cursor: pointer;
-
-    &:hover {
-      color: var(--danger);
-      background: var(--bg-2);
-    }
-    &:disabled {
-      visibility: hidden;
-    }
-  }
-
-  .add-row-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--primary);
-    padding: 8px 4px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
   .bulk-toggle-row {
     margin-top: 8px;
     display: flex;
@@ -769,16 +727,6 @@
     gap: 9px;
     font-size: 13px;
     color: var(--text-2);
-  }
-
-  .bulk-link {
-    color: var(--primary);
-    font-weight: 600;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: inherit;
-    font-size: 13px;
   }
 
   .ilc-top {
@@ -815,26 +763,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-  }
-
-  .copy-btn {
-    padding: 0 14px;
-    border-radius: 9px;
-    background: var(--bg-3);
-    border: 1px solid var(--border-2);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-0);
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    cursor: pointer;
-    font-family: inherit;
-    flex-shrink: 0;
-
-    &:hover {
-      background: var(--bg-4);
     }
   }
 

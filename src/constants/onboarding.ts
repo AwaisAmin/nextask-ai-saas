@@ -3,8 +3,9 @@ import type {
   MemberRole,
   OnboardingCtx,
   OrgSize,
-  OrgUseCase,
+  Template,
   TemplateId,
+  UseCase,
 } from "@/features/onboarding/types";
 
 // ── OnboardingPage ────────────────────────────────────────────────────────────
@@ -47,29 +48,28 @@ export const ORG_ACCENTS = [
   "#E84CC4",
 ] as const;
 
-export const ORG_USE_CASES: { id: OrgUseCase; path: string; label: string }[] =
-  [
-    {
-      id: "product",
-      path: "M3 3h18v6H3zM3 13h8v8H3zM15 13h6v8h-6z",
-      label: "Product & engineering",
-    },
-    {
-      id: "agency",
-      path: "M12 3l9 5-9 5-9-5zM3 13l9 5 9-5",
-      label: "Agency & clients",
-    },
-    {
-      id: "marketing",
-      path: "M3 11l18-7-7 18-2.5-7z",
-      label: "Marketing & content",
-    },
-    {
-      id: "ops",
-      path: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20",
-      label: "Operations & other",
-    },
-  ];
+export const ORG_USE_CASES: UseCase[] = [
+  {
+    id: "product",
+    path: "M3 3h18v6H3zM3 13h8v8H3zM15 13h6v8h-6z",
+    label: "Product & engineering",
+  },
+  {
+    id: "agency",
+    path: "M12 3l9 5-9 5-9-5zM3 13l9 5 9-5",
+    label: "Agency & clients",
+  },
+  {
+    id: "marketing",
+    path: "M3 11l18-7-7 18-2.5-7z",
+    label: "Marketing & content",
+  },
+  {
+    id: "ops",
+    path: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20",
+    label: "Operations & other",
+  },
+];
 
 export const ORG_SIZES: { label: string; value: OrgSize }[] = [
   { label: "Just me", value: "Just me" },
@@ -111,15 +111,7 @@ export const DEFAULT_INVITE_ROWS: InviteRow[] = [
 
 // ── StepProject ───────────────────────────────────────────────────────────────
 
-export const PROJECT_TEMPLATES: {
-  id: TemplateId;
-  emoji: string;
-  color: string;
-  name: string;
-  desc: string;
-  tasks: number;
-  for: OrgUseCase[];
-}[] = [
+export const PROJECT_TEMPLATES: Template[] = [
   {
     id: "product",
     emoji: "◆",
