@@ -65,6 +65,24 @@ export type TemplateCardProps = {
   onSelect: () => void;
 };
 
+// ── Seat / plan types ─────────────────────────────────────────────────────────
+
+export type SeatState = "ok" | "full" | "pending" | "overage";
+
+export type SeatStatus = {
+  state: SeatState;
+  used: number;
+  limit: number;
+  over: number;
+  remaining?: number;
+};
+
+export type SeatMessage = {
+  title: string;
+  body: string;
+  cta: { label: string; action: "upgrade:pro" | "billing" };
+};
+
 // ── Step callback types ───────────────────────────────────────────────────────
 
 export type StepOrgCallbacks = {

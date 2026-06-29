@@ -1,7 +1,15 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { AlertTriangle, ChevronDown, Copy, Link2, Plus, X } from "lucide-react";
+import {
+  AlertTriangle,
+  ChevronDown,
+  Copy,
+  Info,
+  Link2,
+  Plus,
+  X,
+} from "lucide-react";
 import { CheckIcon } from "@/icons";
 import { Button } from "@/components/ui/button";
 import { Dropdown } from "@/components/ui/dropdown";
@@ -14,13 +22,14 @@ import {
   INVITE_LINK_BASE,
   INVITE_LINK_SUFFIX,
   INVITE_ROLES,
-  PLAN_NAMES,
-  PLAN_SEATS,
+  PLANS,
 } from "@/constants/onboarding";
-import { getSeatbarColor, isEmail } from "../../utils";
+import { isEmail, seatMessage, seatStatus } from "../../utils";
+import { UpgradeCheckout } from "../UpgradeCheckout";
 import type {
   InviteRow,
   OnboardingCtx,
+  Plan,
   StepHandle,
   StepInviteCallbacks,
 } from "../../types";
@@ -33,33 +42,57 @@ export const StepInvite = forwardRef<
   const [rows, setRows] = useState<InviteRow[]>(
     ctx.invites?.length ? ctx.invites : DEFAULT_INVITE_ROWS,
   );
-  const [plan, setPlan] = useState(ctx.plan ?? "free");
+  const [plan, setPlan] = useState<Plan>(ctx.plan ?? "free");
   const [showBulk, setShowBulk] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
-  const seats = PLAN_SEATS[plan as keyof typeof PLAN_SEATS];
+  const p = PLANS[plan];
+  const activeSlots =
+    p.seats === Infinity ? Infinity : Math.max(0, p.seats - 1);
   const validEmails = rows.map((r) => r.email.trim()).filter(isEmail);
   const used = 1 + validEmails.length;
-  const isOver = used > seats;
-  const isFull = used === seats;
-  const fillPct = Math.min(100, (used / seats) * 100);
+  const status = seatStatus(plan, used);
+  const message = seatMessage(plan, used);
+
+  const pendingCount =
+    activeSlots === Infinity
+      ? 0
+      : Math.max(0, validEmails.length - activeSlots);
+  const activeCount = validEmails.length - pendingCount;
+
+  const fillColor =
+    status.state === "pending"
+      ? "var(--danger)"
+      : status.state === "overage"
+        ? "var(--info)"
+        : status.state === "full"
+          ? "var(--warn)"
+          : "var(--primary)";
+  const fillPct =
+    p.seats === Infinity
+      ? Math.min(100, (used / 60) * 100)
+      : Math.min(100, (used / p.seats) * 100);
 
   useEffect(() => {
     onValidChange(true);
   }, [onValidChange]);
 
   useEffect(() => {
-    const n = validEmails.length;
-    onNextLabelChange(
-      n > 0
-        ? `Send ${n} invite${n > 1 ? "s" : ""} & continue`
-        : "Continue without inviting",
-    );
-  }, [validEmails.length, onNextLabelChange]);
+    if (validEmails.length === 0) {
+      onNextLabelChange("Continue without inviting");
+    } else if (pendingCount > 0) {
+      onNextLabelChange(`Send ${activeCount} & save ${pendingCount} pending`);
+    } else {
+      onNextLabelChange(
+        `Send ${validEmails.length} invite${validEmails.length > 1 ? "s" : ""} & continue`,
+      );
+    }
+  }, [validEmails.length, pendingCount, activeCount, onNextLabelChange]);
 
   useImperativeHandle(ref, () => ({
     getData() {
-      return { invites: rows.filter((r) => r.email.trim()), plan };
+      return { invites: rows.filter((r) => isEmail(r.email.trim())), plan };
     },
   }));
 
@@ -90,7 +123,16 @@ export const StepInvite = forwardRef<
     setTimeout(() => setCopied(false), COPIED_RESET_MS);
   };
 
-  const fillColor = getSeatbarColor(isOver, isFull);
+  // Compute which rows are pending (over active slot limit)
+  let validSeen = 0;
+  const rowStates = rows.map((row) => {
+    const valid = isEmail(row.email.trim());
+    const isPending =
+      valid && activeSlots !== Infinity && validSeen >= activeSlots;
+    if (valid) validSeen++;
+    return { ...row, isPending };
+  });
+  const firstPendingIdx = rowStates.findIndex((r) => r.isPending);
 
   return (
     <>
@@ -101,13 +143,20 @@ export const StepInvite = forwardRef<
       </p>
 
       {/* Seat bar */}
-      <div className={cn("seatbar", { over: isOver, warn: isFull && !isOver })}>
+      <div
+        className={cn("seatbar", {
+          over: status.state === "pending",
+          warn: status.state === "full" || status.state === "overage",
+        })}
+      >
         <div className="seatbar-head">
           <span className="sb-label">
-            <span>{used}</span> of <span>{seats}</span> seats used
+            <span>{used}</span> of{" "}
+            <span>{p.seats === Infinity ? "Unlimited" : p.seats}</span> seats
+            used
           </span>
           <span className={cn("sb-plan", plan === "pro" && "pro")}>
-            {PLAN_NAMES[plan as keyof typeof PLAN_NAMES]} plan
+            {p.name} plan
           </span>
         </div>
         <div className="seat-track">
@@ -116,73 +165,118 @@ export const StepInvite = forwardRef<
             style={{ width: `${fillPct}%`, background: fillColor }}
           />
         </div>
-        {isOver && (
+        {message && (
           <div className="seat-over show">
             <div className="so-txt">
-              <AlertTriangle size={15} />
+              {message.cta.action === "upgrade:pro" ? (
+                <AlertTriangle size={15} style={{ color: "var(--danger)" }} />
+              ) : (
+                <Info size={15} style={{ color: "var(--info)" }} />
+              )}
               <span>
-                <b>{used - seats} over your Free plan.</b> These will be saved
-                as pending invites — upgrade to Pro to activate them.
+                <b>{message.title}</b> {message.body}
               </span>
             </div>
-            <Button variant="primary" size="sm" onClick={() => setPlan("pro")}>
-              Upgrade to Pro
-            </Button>
+            {message.cta.action === "upgrade:pro" ? (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setCheckoutOpen(true)}
+              >
+                {message.cta.label}
+              </Button>
+            ) : (
+              <Button variant="ghost" size="sm">
+                {message.cta.label}
+              </Button>
+            )}
           </div>
         )}
       </div>
 
       {/* Invite rows */}
       <div className="invite-rows">
-        {rows.map((row, idx) => {
+        {rowStates.map((row, idx) => {
           const roleInfo =
             INVITE_ROLES.find((r) => r.id === row.role) ?? INVITE_ROLES[1];
           return (
-            <div key={idx} className="invite-row">
-              <Input
-                type="email"
-                placeholder="name@company.com"
-                value={row.email}
-                onChange={(e) => updateRow(idx, { email: e.target.value })}
-              />
-              <Dropdown
-                trigger={(toggle) => (
-                  <Button
-                    variant="ghost"
-                    className="h-auto p-[13px] rounded-[11px] text-[13.5px] text-(--text-1) gap-[7px] min-w-[112px] justify-between whitespace-nowrap"
-                    onClick={toggle}
+            <div key={idx}>
+              {idx === firstPendingIdx && (
+                <div className="seat-divider">
+                  <span className="sd-line" />
+                  <span className="sd-txt">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M6 11V8a6 6 0 0 1 12 0v3" />
+                      <rect x="4" y="11" width="16" height="10" rx="2" />
+                    </svg>
+                    {p.name} limit · below activate when you upgrade
+                  </span>
+                  <span className="sd-line" />
+                </div>
+              )}
+              <div className={cn("invite-row", row.isPending && "pending")}>
+                <Input
+                  type="email"
+                  placeholder="name@company.com"
+                  value={row.email}
+                  onChange={(e) => updateRow(idx, { email: e.target.value })}
+                />
+                <Dropdown
+                  trigger={(toggle) => (
+                    <Button
+                      variant="ghost"
+                      className="h-auto p-[13px] rounded-[11px] text-[13.5px] text-(--text-1) gap-[7px] min-w-[112px] justify-between whitespace-nowrap"
+                      onClick={toggle}
+                    >
+                      {roleInfo.name}
+                      <ChevronDown size={14} />
+                    </Button>
+                  )}
+                  menuClassName="role-menu"
+                >
+                  {INVITE_ROLES.map((r) => (
+                    <Button
+                      key={r.id}
+                      variant="ghost"
+                      className="w-full justify-start items-start text-left bg-transparent border-0 rounded-[9px] py-[9px] px-[10px] h-auto whitespace-normal"
+                      onClick={() => updateRow(idx, { role: r.id })}
+                    >
+                      <div>
+                        <div className="rname">{r.name}</div>
+                        <div className="rdesc">{r.desc}</div>
+                      </div>
+                    </Button>
+                  ))}
+                </Dropdown>
+                {row.isPending && (
+                  <span
+                    className="pending-pill"
+                    title="Saved as pending until you upgrade"
                   >
-                    {roleInfo.name}
-                    <ChevronDown size={14} />
-                  </Button>
+                    Pending
+                  </span>
                 )}
-                menuClassName="role-menu"
-              >
-                {INVITE_ROLES.map((r) => (
-                  <Button
-                    key={r.id}
-                    variant="ghost"
-                    className="w-full justify-start items-start text-left bg-transparent border-0 rounded-[9px] py-[9px] px-[10px] h-auto whitespace-normal"
-                    onClick={() => updateRow(idx, { role: r.id })}
-                  >
-                    <div>
-                      <div className="rname">{r.name}</div>
-                      <div className="rdesc">{r.desc}</div>
-                    </div>
-                  </Button>
-                ))}
-              </Dropdown>
-              <Button
-                variant="ghost"
-                className={cn(
-                  "w-[38px] h-[46px] rounded-[10px] border-0 text-(--text-3) hover:text-(--danger) hover:bg-(--bg-2) shrink-0",
-                  rows.length <= 1 && "invisible",
-                )}
-                disabled={rows.length <= 1}
-                onClick={() => removeRow(idx)}
-              >
-                <X size={17} />
-              </Button>
+                <Button
+                  variant="ghost"
+                  className={cn(
+                    "w-[38px] h-[46px] rounded-[10px] border-0 text-(--text-3) hover:text-(--danger) hover:bg-(--bg-2) shrink-0",
+                    rows.length <= 1 && "invisible",
+                  )}
+                  disabled={rows.length <= 1}
+                  onClick={() => removeRow(idx)}
+                >
+                  <X size={17} />
+                </Button>
+              </div>
             </div>
           );
         })}
@@ -250,6 +344,15 @@ export const StepInvite = forwardRef<
           </Button>
         </div>
       </div>
+
+      {checkoutOpen && (
+        <UpgradeCheckout
+          seats={used}
+          reason={`You're inviting ${used} people — more than Free allows. Go Pro to activate everyone now.`}
+          onClose={() => setCheckoutOpen(false)}
+          onUpgraded={() => setPlan("pro")}
+        />
+      )}
     </>
   );
 });

@@ -4,6 +4,7 @@ import type {
   MemberRole,
   OnboardingCtx,
   OrgSize,
+  Plan,
   Template,
   TemplateId,
   UseCase,
@@ -125,9 +126,45 @@ export const SLUG_PREFIX = `${APP_DOMAIN}/`;
 export const INVITE_LINK_BASE = `${APP_DOMAIN}/join/`;
 export const INVITE_LINK_SUFFIX = "-x8f2";
 
-export const PLAN_SEATS: Record<string, number> = { free: 5, pro: 50 };
+export const PLANS = {
+  free: {
+    id: "free" as Plan,
+    name: "Free",
+    priceMonthly: 0,
+    perSeat: false,
+    seats: 5,
+    projects: 3,
+    aiPerDay: 10,
+    overage: "pending" as const,
+  },
+  pro: {
+    id: "pro" as Plan,
+    name: "Pro",
+    priceMonthly: 12,
+    perSeat: true,
+    seats: 50,
+    projects: Infinity,
+    aiPerDay: 100,
+    overage: "bill" as const,
+  },
+} satisfies Record<Plan, object>;
 
-export const PLAN_NAMES: Record<string, string> = { free: "Free", pro: "Pro" };
+export const CHECKOUT_FEATURES = [
+  "Unlimited projects & up to 50 members",
+  "100 AI Agent actions / day",
+  "Roadmaps, analytics & automations",
+  "Priority support",
+] as const;
+
+export const COUNTRIES = [
+  "United States",
+  "United Kingdom",
+  "Pakistan",
+  "India",
+  "Canada",
+  "Australia",
+  "Germany",
+] as const;
 
 export const INVITE_ROLES: { id: MemberRole; name: string; desc: string }[] = [
   { id: "admin", name: "Admin", desc: "Manage members, billing & settings" },
