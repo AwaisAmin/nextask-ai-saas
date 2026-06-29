@@ -1,10 +1,13 @@
 import { APP_DOMAIN } from "@/lib/constants";
 import type {
+  BillingCycle,
+  CheckoutFormState,
   InviteRow,
   MemberRole,
   OnboardingCtx,
   OrgSize,
   Plan,
+  SeatState,
   Template,
   TemplateId,
   UseCase,
@@ -149,6 +152,32 @@ export const PLANS = {
   },
 } satisfies Record<Plan, object>;
 
+// ── Checkout ─────────────────────────────────────────────────────────────────
+
+export const CHECKOUT_ANNUAL_DISCOUNT = 0.8;
+
+export const CHECKOUT_BADGE = "✦ NexTask Pro";
+export const CHECKOUT_HEADLINE = "Activate your whole team";
+
+export const BILLING_CYCLES: {
+  id: BillingCycle;
+  label: string;
+  badge?: string;
+}[] = [
+  { id: "monthly", label: "Monthly" },
+  { id: "annual", label: "Annual", badge: "−20%" },
+];
+
+export const CYCLE_BILLED_LABEL: Record<BillingCycle, string> = {
+  monthly: "monthly",
+  annual: "annually",
+};
+
+export const CYCLE_PERIOD: Record<BillingCycle, string> = {
+  monthly: "/mo",
+  annual: "/yr",
+};
+
 export const CHECKOUT_FEATURES = [
   "Unlimited projects & up to 50 members",
   "100 AI Agent actions / day",
@@ -165,6 +194,50 @@ export const COUNTRIES = [
   "Australia",
   "Germany",
 ] as const;
+
+export const CHECKOUT_DEFAULT_FORM: CheckoutFormState = {
+  name: "",
+  cardNum: "",
+  expiry: "",
+  cvc: "",
+  country: COUNTRIES[0],
+};
+
+// ── Seat bar ──────────────────────────────────────────────────────────────────
+
+export const SEAT_FILL_COLORS: Record<SeatState, string> = {
+  ok: "var(--primary)",
+  full: "var(--warn)",
+  pending: "var(--danger)",
+  overage: "var(--info)",
+};
+
+export const UNLIMITED_SEAT_DENOMINATOR = 60;
+
+// ── StepInvite UI strings ─────────────────────────────────────────────────────
+
+export const STEP_INVITE_TITLE = "Invite your team";
+export const STEP_INVITE_SUB_PRE =
+  "NexTask is better together. Invite teammates to";
+export const STEP_INVITE_SUB_POST = "— they'll get an email to join.";
+export const FALLBACK_ORG_NAME = "your workspace";
+export const FALLBACK_ORG_SLUG = "workspace";
+export const DEFAULT_INVITE_ROLE: MemberRole = "member";
+export const SEAT_LABEL_UNLIMITED = "Unlimited";
+export const SEATBAR_SEATS_LABEL = "seats used";
+export const SEATBAR_PLAN_SUFFIX = "plan";
+export const INVITE_EMAIL_PLACEHOLDER = "name@company.com";
+export const INVITE_NEXT_LABEL_SKIP = "Continue without inviting";
+export const INVITE_PENDING_LABEL = "Pending";
+export const INVITE_PENDING_PILL_TITLE = "Saved as pending until you upgrade";
+export const INVITE_LINK_LABEL = "Or share an invite link";
+export const INVITE_COPY_LABEL = "Copy";
+export const INVITE_COPIED_LABEL = "Copied";
+export const INVITE_ADD_ROW_LABEL = "Add another";
+export const BULK_TOGGLE_PROMPT = "Got a list?";
+export const BULK_TOGGLE_CTA = "Paste multiple emails";
+export const BULK_PASTE_PLACEHOLDER =
+  "alex@acme.com, sara@acme.com, omar@acme.com";
 
 export const INVITE_ROLES: { id: MemberRole; name: string; desc: string }[] = [
   { id: "admin", name: "Admin", desc: "Manage members, billing & settings" },

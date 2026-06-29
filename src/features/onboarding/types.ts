@@ -1,5 +1,14 @@
 export type OrgUseCase = "product" | "agency" | "marketing" | "ops";
 export type SlugStatus = "ok" | "short" | "taken" | null;
+export type BillingCycle = "monthly" | "annual";
+
+export type CheckoutFormState = {
+  name: string;
+  cardNum: string;
+  expiry: string;
+  cvc: string;
+  country: string;
+};
 export type OrgSize = "Just me" | "2-10" | "11-50" | "51-200" | "200+";
 export type MemberRole = "admin" | "member" | "viewer";
 export type TemplateId = "product" | "marketing" | "design" | "blank";

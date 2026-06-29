@@ -2,31 +2,36 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
-import { CheckIcon } from "@/icons";
-import { CHECKOUT_FEATURES, COUNTRIES, PLANS } from "@/constants/onboarding";
+import { ChevronDown, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dropdown } from "@/components/ui/dropdown";
+import { Input } from "@/components/ui/input";
+import { CheckIcon, LockIcon } from "@/icons";
+import {
+  BILLING_CYCLES,
+  CHECKOUT_BADGE,
+  CHECKOUT_DEFAULT_FORM,
+  CHECKOUT_FEATURES,
+  CHECKOUT_HEADLINE,
+  COUNTRIES,
+  CYCLE_BILLED_LABEL,
+  CYCLE_PERIOD,
+} from "@/constants/onboarding";
+import {
+  calcProPrice,
+  formatCardNum,
+  formatExpiry,
+  fmtPrice,
+  isCheckoutValid,
+} from "../utils";
 import { cn } from "@/lib/utils";
-
-type BillingCycle = "monthly" | "annual";
+import type { BillingCycle, CheckoutFormState } from "../types";
 
 type Props = {
   seats: number;
   reason: string;
   onClose: () => void;
   onUpgraded: () => void;
-};
-
-const fmt = (n: number) => (n % 1 === 0 ? String(n) : n.toFixed(2));
-
-const calcPrice = (seats: number, cycle: BillingCycle) => {
-  const perSeatMo = PLANS.pro.priceMonthly;
-  const annualPerSeatMo = Math.round(perSeatMo * 0.8);
-  const unit = cycle === "annual" ? annualPerSeatMo : perSeatMo;
-  const monthly = unit * seats;
-  const billedNow = cycle === "annual" ? monthly * 12 : monthly;
-  const saved =
-    cycle === "annual" ? (perSeatMo - annualPerSeatMo) * seats * 12 : 0;
-  return { unit, monthly, billedNow, saved };
 };
 
 export const UpgradeCheckout = ({
@@ -36,22 +41,14 @@ export const UpgradeCheckout = ({
   onUpgraded,
 }: Props) => {
   const [cycle, setCycle] = useState<BillingCycle>("annual");
-  const [name, setName] = useState("");
-  const [cardNum, setCardNum] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvc, setCvc] = useState("");
-  const [country, setCountry] = useState("United States");
+  const [form, setForm] = useState<CheckoutFormState>(CHECKOUT_DEFAULT_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [shake, setShake] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const price = calcPrice(seats, cycle);
-  const isFormValid =
-    name.trim().length >= 2 &&
-    cardNum.replace(/\s/g, "").length >= 15 &&
-    expiry.replace(/\D/g, "").length === 4 &&
-    cvc.length >= 3;
+  const price = calcProPrice(seats, cycle);
+  const isValid = isCheckoutValid(form);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -61,23 +58,26 @@ export const UpgradeCheckout = ({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const handleCardNum = (v: string) => {
-    const digits = v.replace(/\D/g, "").slice(0, 16);
-    setCardNum(digits.replace(/(.{4})/g, "$1 ").trim());
-  };
+  const patch =
+    (field: keyof CheckoutFormState) =>
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const handleExpiry = (v: string) => {
-    const digits = v.replace(/\D/g, "").slice(0, 4);
-    setExpiry(
-      digits.length >= 3
-        ? digits.slice(0, 2) + " / " + digits.slice(2)
-        : digits,
-    );
-  };
+  const handleCardNum = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((prev) => ({ ...prev, cardNum: formatCardNum(e.target.value) }));
+
+  const handleExpiry = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((prev) => ({ ...prev, expiry: formatExpiry(e.target.value) }));
+
+  const handleCvc = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((prev) => ({
+      ...prev,
+      cvc: e.target.value.replace(/\D/g, "").slice(0, 4),
+    }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) {
+    if (!isValid) {
       setShake(true);
       setTimeout(() => setShake(false), 400);
       return;
@@ -90,9 +90,15 @@ export const UpgradeCheckout = ({
     <div className="co-host">
       <div className="co-scrim" onClick={onClose} />
       <div className="co-modal" role="dialog" aria-label="Upgrade to Pro">
-        <button className="co-x" onClick={onClose} aria-label="Close">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="co-x"
+          onClick={onClose}
+          aria-label="Close"
+        >
           <X size={18} />
-        </button>
+        </Button>
 
         {isSuccess ? (
           <div className="co-success">
@@ -104,39 +110,51 @@ export const UpgradeCheckout = ({
               All {seats} invites are now active. Your team can start the moment
               they accept.
             </p>
-            <button
-              className="co-submit ready"
+            <Button
+              variant="primary"
+              className="co-submit"
               onClick={() => {
                 onUpgraded();
                 onClose();
               }}
             >
               Continue setup
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="co-grid">
-            {/* LEFT: plan summary */}
             <aside className="co-summary">
-              <div className="co-plan-badge">✦ NexTask Pro</div>
-              <h2 className="co-h">Activate your whole team</h2>
+              <div className="co-plan-badge">{CHECKOUT_BADGE}</div>
+              <h2 className="co-h">{CHECKOUT_HEADLINE}</h2>
               <p className="co-reason">{reason}</p>
 
               <div className="co-cycle">
-                <button
-                  type="button"
-                  className={cn(cycle === "monthly" && "on")}
-                  onClick={() => setCycle("monthly")}
-                >
-                  Monthly
-                </button>
-                <button
-                  type="button"
-                  className={cn(cycle === "annual" && "on")}
-                  onClick={() => setCycle("annual")}
-                >
-                  Annual <span className="co-save">−20%</span>
-                </button>
+                {BILLING_CYCLES.map(({ id, label, badge }) => {
+                  const isActive = cycle === id;
+                  return (
+                    <Button
+                      key={id}
+                      type="button"
+                      variant="ghost"
+                      className={cn(
+                        "border-0 shadow-none rounded-[999px] py-[7px] px-[15px] text-[13px] font-semibold gap-[7px]",
+                        isActive
+                          ? "bg-(--primary) text-(--primary-ink) hover:bg-(--primary)"
+                          : "bg-transparent hover:bg-transparent text-(--text-2)",
+                      )}
+                      onClick={() => setCycle(id)}
+                    >
+                      {label}
+                      {badge && (
+                        <span
+                          className={cn("co-save", isActive && "text-white")}
+                        >
+                          {badge}
+                        </span>
+                      )}
+                    </Button>
+                  );
+                })}
               </div>
 
               <div className="co-lines">
@@ -149,15 +167,13 @@ export const UpgradeCheckout = ({
                   </span>
                 </div>
                 <div className="co-line sub">
-                  <span>
-                    Billed {cycle === "annual" ? "annually" : "monthly"}
-                  </span>
-                  <span>${fmt(price.monthly)}/mo</span>
+                  <span>Billed {CYCLE_BILLED_LABEL[cycle]}</span>
+                  <span>${fmtPrice(price.monthly)}/mo</span>
                 </div>
                 {price.saved > 0 && (
                   <div className="co-line save">
                     <span>You save</span>
-                    <span>${fmt(price.saved)}/yr</span>
+                    <span>${fmtPrice(price.saved)}/yr</span>
                   </div>
                 )}
               </div>
@@ -165,8 +181,8 @@ export const UpgradeCheckout = ({
               <div className="co-total">
                 <span>Due today</span>
                 <span className="co-amt">
-                  ${fmt(price.billedNow)}
-                  <i>{cycle === "annual" ? "/yr" : "/mo"}</i>
+                  ${fmtPrice(price.billedNow)}
+                  <i>{CYCLE_PERIOD[cycle]}</i>
                 </span>
               </div>
 
@@ -177,24 +193,11 @@ export const UpgradeCheckout = ({
               </ul>
             </aside>
 
-            {/* RIGHT: payment */}
             <section className="co-pay">
               <div className="co-pay-head">
                 <h3>Payment details</h3>
                 <span className="co-secure">
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="4" y="11" width="16" height="9" rx="2" />
-                    <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-                  </svg>
+                  <LockIcon size={13} />
                   Secure &amp; encrypted
                 </span>
               </div>
@@ -206,26 +209,26 @@ export const UpgradeCheckout = ({
               >
                 <label className="co-field">
                   <span>Name on card</span>
-                  <input
+                  <Input
                     type="text"
                     placeholder="Alex Rivera"
                     autoComplete="cc-name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={form.name}
+                    onChange={patch("name")}
                   />
                 </label>
 
                 <label className="co-field">
                   <span>Card number</span>
                   <div className="co-card-input">
-                    <input
+                    <Input
                       type="text"
                       inputMode="numeric"
                       placeholder="1234 1234 1234 1234"
                       autoComplete="cc-number"
                       maxLength={19}
-                      value={cardNum}
-                      onChange={(e) => handleCardNum(e.target.value)}
+                      value={form.cardNum}
+                      onChange={handleCardNum}
                     />
                     <span className="co-brands">
                       <span className="cb visa">VISA</span>
@@ -237,69 +240,95 @@ export const UpgradeCheckout = ({
                 <div className="co-row">
                   <label className="co-field">
                     <span>Expiry</span>
-                    <input
+                    <Input
                       type="text"
                       inputMode="numeric"
                       placeholder="MM / YY"
                       autoComplete="cc-exp"
                       maxLength={7}
-                      value={expiry}
-                      onChange={(e) => handleExpiry(e.target.value)}
+                      value={form.expiry}
+                      onChange={handleExpiry}
                     />
                   </label>
                   <label className="co-field">
                     <span>CVC</span>
-                    <input
+                    <Input
                       type="text"
                       inputMode="numeric"
                       placeholder="123"
                       autoComplete="cc-csc"
                       maxLength={4}
-                      value={cvc}
-                      onChange={(e) =>
-                        setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))
-                      }
+                      value={form.cvc}
+                      onChange={handleCvc}
                     />
                   </label>
                 </div>
 
-                <label className="co-field">
+                <div className="co-field">
                   <span>Country</span>
-                  <select
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
+                  <Dropdown
+                    className="w-full"
+                    portal
+                    trigger={(toggle) => (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="w-full justify-between rounded-[11px] py-[12px] px-[13px] text-[14.5px] font-normal hover:bg-(--bg-2) hover:border-(--primary)"
+                        onClick={toggle}
+                      >
+                        {form.country}
+                        <ChevronDown size={14} />
+                      </Button>
+                    )}
+                    menuClassName="co-country-menu"
                   >
                     {COUNTRIES.map((c) => (
-                      <option key={c}>{c}</option>
+                      <Button
+                        key={c}
+                        type="button"
+                        variant="ghost"
+                        className={cn(
+                          "w-full justify-start rounded-[8px] px-3 py-2 text-[13.5px] font-normal bg-transparent border-0 shadow-none hover:bg-(--bg-3) hover:border-0",
+                          c === form.country && "text-(--primary)",
+                        )}
+                        onClick={() =>
+                          setForm((prev) => ({ ...prev, country: c }))
+                        }
+                      >
+                        {c}
+                      </Button>
                     ))}
-                  </select>
-                </label>
+                  </Dropdown>
+                </div>
 
-                <button
+                <Button
                   type="submit"
-                  className={cn(
-                    "co-submit",
-                    isFormValid && !isSubmitting && "ready",
-                  )}
-                  disabled={isSubmitting}
+                  variant="primary"
+                  disabled={!isValid || isSubmitting}
+                  className="co-submit"
                 >
                   {isSubmitting ? (
                     <>
                       <span className="co-spin" /> Processing…
                     </>
                   ) : (
-                    `Pay $${fmt(price.billedNow)} & activate Pro`
+                    `Pay $${fmtPrice(price.billedNow)} & activate Pro`
                   )}
-                </button>
-                <button type="button" className="co-later" onClick={onClose}>
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="co-later w-full py-[11px] text-[13px] text-(--text-2) hover:text-(--text-0) bg-transparent border-0 shadow-none hover:bg-transparent [font-family:var(--font-body)]"
+                  onClick={onClose}
+                >
                   Not now — keep extra invites pending
-                </button>
+                </Button>
+
                 <p className="co-fine">
-                  <CheckIcon
-                    size={13}
-                    strokeWidth={2}
-                    className="text-(--ok)"
-                  />
+                  <span className="text-(--ok)">
+                    <CheckIcon size={13} strokeWidth={2} />
+                  </span>
                   Cancel anytime · No charge until you confirm · Free plan stays
                   free
                 </p>

@@ -10,21 +10,45 @@ import {
   Plus,
   X,
 } from "lucide-react";
-import { CheckIcon } from "@/icons";
+import { CheckIcon, LockIcon } from "@/icons";
 import { Button } from "@/components/ui/button";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import {
+  BULK_PASTE_PLACEHOLDER,
+  BULK_TOGGLE_CTA,
+  BULK_TOGGLE_PROMPT,
   COPIED_RESET_MS,
+  DEFAULT_INVITE_ROLE,
   DEFAULT_INVITE_ROWS,
+  FALLBACK_ORG_NAME,
+  FALLBACK_ORG_SLUG,
+  INVITE_ADD_ROW_LABEL,
+  INVITE_COPIED_LABEL,
+  INVITE_COPY_LABEL,
+  INVITE_EMAIL_PLACEHOLDER,
   INVITE_LINK_BASE,
+  INVITE_LINK_LABEL,
   INVITE_LINK_SUFFIX,
+  INVITE_PENDING_LABEL,
+  INVITE_PENDING_PILL_TITLE,
   INVITE_ROLES,
-  PLANS,
+  SEATBAR_PLAN_SUFFIX,
+  SEATBAR_SEATS_LABEL,
+  SEAT_LABEL_UNLIMITED,
+  STEP_INVITE_SUB_POST,
+  STEP_INVITE_SUB_PRE,
+  STEP_INVITE_TITLE,
 } from "@/constants/onboarding";
-import { isEmail, seatMessage, seatStatus } from "../../utils";
+import {
+  computeInviteStats,
+  getDividerLabel,
+  getInviteNextLabel,
+  getUpgradeReason,
+  isEmail,
+} from "../../utils";
 import { UpgradeCheckout } from "../UpgradeCheckout";
 import type {
   InviteRow,
@@ -38,7 +62,7 @@ export const StepInvite = forwardRef<
   StepHandle,
   { ctx: OnboardingCtx } & StepInviteCallbacks
 >(({ ctx, onValidChange, onNextLabelChange }, ref) => {
-  const orgName = ctx.org?.name || "your workspace";
+  const orgName = ctx.org?.name || FALLBACK_ORG_NAME;
   const [rows, setRows] = useState<InviteRow[]>(
     ctx.invites?.length ? ctx.invites : DEFAULT_INVITE_ROWS,
   );
@@ -47,48 +71,29 @@ export const StepInvite = forwardRef<
   const [copied, setCopied] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
-  const p = PLANS[plan];
-  const activeSlots =
-    p.seats === Infinity ? Infinity : Math.max(0, p.seats - 1);
-  const validEmails = rows.map((r) => r.email.trim()).filter(isEmail);
-  const used = 1 + validEmails.length;
-  const status = seatStatus(plan, used);
-  const message = seatMessage(plan, used);
-
-  const pendingCount =
-    activeSlots === Infinity
-      ? 0
-      : Math.max(0, validEmails.length - activeSlots);
-  const activeCount = validEmails.length - pendingCount;
-
-  const fillColor =
-    status.state === "pending"
-      ? "var(--danger)"
-      : status.state === "overage"
-        ? "var(--info)"
-        : status.state === "full"
-          ? "var(--warn)"
-          : "var(--primary)";
-  const fillPct =
-    p.seats === Infinity
-      ? Math.min(100, (used / 60) * 100)
-      : Math.min(100, (used / p.seats) * 100);
+  const {
+    p,
+    validEmails,
+    used,
+    status,
+    message,
+    pendingCount,
+    activeCount,
+    rowStates,
+    firstPendingIdx,
+    fillPct,
+    fillColor,
+  } = computeInviteStats(rows, plan);
 
   useEffect(() => {
     onValidChange(true);
   }, [onValidChange]);
 
   useEffect(() => {
-    if (validEmails.length === 0) {
-      onNextLabelChange("Continue without inviting");
-    } else if (pendingCount > 0) {
-      onNextLabelChange(`Send ${activeCount} & save ${pendingCount} pending`);
-    } else {
-      onNextLabelChange(
-        `Send ${validEmails.length} invite${validEmails.length > 1 ? "s" : ""} & continue`,
-      );
-    }
-  }, [validEmails.length, pendingCount, activeCount, onNextLabelChange]);
+    onNextLabelChange(
+      getInviteNextLabel(validEmails.length, activeCount, pendingCount),
+    );
+  }, [validEmails.length, activeCount, pendingCount, onNextLabelChange]);
 
   useImperativeHandle(ref, () => ({
     getData() {
@@ -100,7 +105,7 @@ export const StepInvite = forwardRef<
     setRows((prev) => prev.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
 
   const addRow = () =>
-    setRows((prev) => [...prev, { email: "", role: "member" }]);
+    setRows((prev) => [...prev, { email: "", role: DEFAULT_INVITE_ROLE }]);
 
   const removeRow = (idx: number) =>
     setRows((prev) => prev.filter((_, i) => i !== idx));
@@ -111,35 +116,23 @@ export const StepInvite = forwardRef<
       .map((s) => s.trim())
       .filter(Boolean);
     if (emails.length) {
-      setRows(emails.map((email) => ({ email, role: "member" })));
+      setRows(emails.map((email) => ({ email, role: DEFAULT_INVITE_ROLE })));
       setShowBulk(false);
     }
   };
 
   const copyInviteLink = () => {
-    const link = `${INVITE_LINK_BASE}${ctx.org?.slug || "workspace"}${INVITE_LINK_SUFFIX}`;
+    const link = `${INVITE_LINK_BASE}${ctx.org?.slug || FALLBACK_ORG_SLUG}${INVITE_LINK_SUFFIX}`;
     navigator.clipboard?.writeText(link).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), COPIED_RESET_MS);
   };
 
-  // Compute which rows are pending (over active slot limit)
-  let validSeen = 0;
-  const rowStates = rows.map((row) => {
-    const valid = isEmail(row.email.trim());
-    const isPending =
-      valid && activeSlots !== Infinity && validSeen >= activeSlots;
-    if (valid) validSeen++;
-    return { ...row, isPending };
-  });
-  const firstPendingIdx = rowStates.findIndex((r) => r.isPending);
-
   return (
     <>
-      <h1 className="ob-h1">Invite your team</h1>
+      <h1 className="ob-h1">{STEP_INVITE_TITLE}</h1>
       <p className="ob-sub">
-        NexTask is better together. Invite teammates to <b>{orgName}</b> —
-        they&apos;ll get an email to join.
+        {STEP_INVITE_SUB_PRE} <b>{orgName}</b> {STEP_INVITE_SUB_POST}
       </p>
 
       {/* Seat bar */}
@@ -152,11 +145,11 @@ export const StepInvite = forwardRef<
         <div className="seatbar-head">
           <span className="sb-label">
             <span>{used}</span> of{" "}
-            <span>{p.seats === Infinity ? "Unlimited" : p.seats}</span> seats
-            used
+            <span>{p.seats === Infinity ? SEAT_LABEL_UNLIMITED : p.seats}</span>{" "}
+            {SEATBAR_SEATS_LABEL}
           </span>
           <span className={cn("sb-plan", plan === "pro" && "pro")}>
-            {p.name} plan
+            {p.name} {SEATBAR_PLAN_SUFFIX}
           </span>
         </div>
         <div className="seat-track">
@@ -177,19 +170,19 @@ export const StepInvite = forwardRef<
                 <b>{message.title}</b> {message.body}
               </span>
             </div>
-            {message.cta.action === "upgrade:pro" ? (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setCheckoutOpen(true)}
-              >
-                {message.cta.label}
-              </Button>
-            ) : (
-              <Button variant="ghost" size="sm">
-                {message.cta.label}
-              </Button>
-            )}
+            <Button
+              variant={
+                message.cta.action === "upgrade:pro" ? "primary" : "ghost"
+              }
+              size="sm"
+              onClick={
+                message.cta.action === "upgrade:pro"
+                  ? () => setCheckoutOpen(true)
+                  : undefined
+              }
+            >
+              {message.cta.label}
+            </Button>
           </div>
         )}
       </div>
@@ -205,20 +198,8 @@ export const StepInvite = forwardRef<
                 <div className="seat-divider">
                   <span className="sd-line" />
                   <span className="sd-txt">
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M6 11V8a6 6 0 0 1 12 0v3" />
-                      <rect x="4" y="11" width="16" height="10" rx="2" />
-                    </svg>
-                    {p.name} limit · below activate when you upgrade
+                    <LockIcon size={12} />
+                    {getDividerLabel(p.name)}
                   </span>
                   <span className="sd-line" />
                 </div>
@@ -226,7 +207,7 @@ export const StepInvite = forwardRef<
               <div className={cn("invite-row", row.isPending && "pending")}>
                 <Input
                   type="email"
-                  placeholder="name@company.com"
+                  placeholder={INVITE_EMAIL_PLACEHOLDER}
                   value={row.email}
                   onChange={(e) => updateRow(idx, { email: e.target.value })}
                 />
@@ -260,9 +241,9 @@ export const StepInvite = forwardRef<
                 {row.isPending && (
                   <span
                     className="pending-pill"
-                    title="Saved as pending until you upgrade"
+                    title={INVITE_PENDING_PILL_TITLE}
                   >
-                    Pending
+                    {INVITE_PENDING_LABEL}
                   </span>
                 )}
                 <Button
@@ -288,23 +269,23 @@ export const StepInvite = forwardRef<
         onClick={addRow}
       >
         <Plus size={16} />
-        Add another
+        {INVITE_ADD_ROW_LABEL}
       </Button>
 
       <div className="bulk-toggle-row">
-        <span>Got a list?</span>
+        <span>{BULK_TOGGLE_PROMPT}</span>
         <Button
           variant="link"
           className="text-[13px]"
           onClick={() => setShowBulk((v) => !v)}
         >
-          Paste multiple emails
+          {BULK_TOGGLE_CTA}
         </Button>
       </div>
       {showBulk && (
         <Textarea
           className="mt-2.5"
-          placeholder="alex@acme.com, sara@acme.com, omar@acme.com"
+          placeholder={BULK_PASTE_PLACEHOLDER}
           rows={4}
           onBlur={(e) => handleBulkBlur(e.target.value)}
           autoFocus
@@ -315,12 +296,12 @@ export const StepInvite = forwardRef<
       <div className="invite-link-card">
         <div className="ilc-top">
           <Link2 size={16} color="var(--primary)" />
-          Or share an invite link
+          {INVITE_LINK_LABEL}
         </div>
         <div className="ilc-row">
           <code>
             {INVITE_LINK_BASE}
-            {ctx.org?.slug || "workspace"}
+            {ctx.org?.slug || FALLBACK_ORG_SLUG}
             {INVITE_LINK_SUFFIX}
           </code>
           <Button
@@ -333,12 +314,12 @@ export const StepInvite = forwardRef<
                 <span className="text-(--ok)">
                   <CheckIcon size={14} strokeWidth={2.4} />
                 </span>
-                Copied
+                {INVITE_COPIED_LABEL}
               </>
             ) : (
               <>
                 <Copy size={14} />
-                Copy
+                {INVITE_COPY_LABEL}
               </>
             )}
           </Button>
@@ -348,7 +329,7 @@ export const StepInvite = forwardRef<
       {checkoutOpen && (
         <UpgradeCheckout
           seats={used}
-          reason={`You're inviting ${used} people — more than Free allows. Go Pro to activate everyone now.`}
+          reason={getUpgradeReason(used)}
           onClose={() => setCheckoutOpen(false)}
           onUpgraded={() => setPlan("pro")}
         />
