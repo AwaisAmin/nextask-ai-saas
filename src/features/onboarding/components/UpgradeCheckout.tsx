@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { CheckIcon } from "@/icons";
 import { CHECKOUT_FEATURES, COUNTRIES, PLANS } from "@/constants/onboarding";
@@ -85,7 +86,7 @@ export const UpgradeCheckout = ({
     setTimeout(() => setIsSuccess(true), 1400);
   };
 
-  return (
+  return createPortal(
     <div className="co-host">
       <div className="co-scrim" onClick={onClose} />
       <div className="co-modal" role="dialog" aria-label="Upgrade to Pro">
@@ -307,6 +308,7 @@ export const UpgradeCheckout = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
