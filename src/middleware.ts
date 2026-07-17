@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_ROUTES = ["/", "/login", "/register", "/verify-email"];
+// Auth pages — logged-in users are redirected away
+const AUTH_ROUTES = ["/login", "/register", "/verify-email"];
 const PASSWORD_RESET_PREFIXES = ["/password-reset", "/reset-password"];
 const OAUTH_CALLBACK_PREFIX = "/callback";
-const DEFAULT_LOGIN = "/login";
+
+// Open routes — public AND reachable by logged-in users
+const OPEN_PREFIXES = ["/", "/auth-required"];
+
 const DEFAULT_DASHBOARD = "/dashboard";
+const AUTH_GATE = "/auth-required";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -13,16 +18,26 @@ export function middleware(request: NextRequest) {
     request.cookies.get("nx_session")?.value ||
     request.cookies.get("refresh_token")?.value;
 
-  const isPublicRoute =
-    PUBLIC_ROUTES.includes(pathname) ||
+  const isAuthPage =
+    AUTH_ROUTES.includes(pathname) ||
     PASSWORD_RESET_PREFIXES.some((p) => pathname.startsWith(p)) ||
     pathname.startsWith(OAUTH_CALLBACK_PREFIX);
 
-  if (!hasSession && !isPublicRoute) {
-    return NextResponse.redirect(new URL(DEFAULT_LOGIN, request.url));
+  const isOpenRoute = OPEN_PREFIXES.some((p) =>
+    p === "/" ? pathname === "/" : pathname.startsWith(p),
+  );
+
+  const isPublic = isAuthPage || isOpenRoute;
+
+  if (!hasSession && !isPublic) {
+    const next = pathname + (request.nextUrl.search || "");
+    return NextResponse.redirect(
+      new URL(`${AUTH_GATE}?next=${next}`, request.url),
+    );
   }
 
-  if (hasSession && isPublicRoute && pathname !== "/") {
+  // Redirect logged-in users away from auth pages only (not open routes)
+  if (hasSession && isAuthPage) {
     return NextResponse.redirect(new URL(DEFAULT_DASHBOARD, request.url));
   }
 

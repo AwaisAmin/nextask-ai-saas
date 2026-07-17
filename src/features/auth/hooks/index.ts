@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth.store";
 import { setSessionCookie } from "@/lib/session";
@@ -23,6 +23,7 @@ import type {
 
 export const useLogin = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const setAuth = useAuthStore((s) => s.setAuth);
 
   return useMutation({
@@ -43,7 +44,8 @@ export const useLogin = () => {
 
       setAuth(user, tokens.access_token);
       setSessionCookie();
-      router.push("/dashboard");
+      const next = searchParams.get("next");
+      router.push(next ?? "/dashboard");
     },
   });
 };

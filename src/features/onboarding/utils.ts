@@ -20,6 +20,8 @@ import type {
   TemplateId,
 } from "./types";
 
+export { toInitials } from "@/lib/format";
+
 // ── Slug ──────────────────────────────────────────────────────────────────────
 
 export const slugify = (s: string) =>
@@ -30,14 +32,6 @@ export const slugify = (s: string) =>
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
-
-export const toInitials = (name: string) =>
-  (name || "N")
-    .split(/\s+/)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase() || "N";
 
 export const isSlugAvailable = (s: string) =>
   s.length >= 3 && !TAKEN_SLUGS.includes(s);
