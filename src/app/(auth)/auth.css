@@ -169,6 +169,12 @@
       border: 1px solid color-mix(in oklab, var(--danger) 32%, transparent);
     }
 
+    &.primary {
+      background: color-mix(in oklab, var(--primary) 16%, transparent);
+      color: var(--primary);
+      border: 1px solid color-mix(in oklab, var(--primary) 32%, transparent);
+    }
+
     &.lg {
       width: 66px;
       height: 66px;
@@ -322,6 +328,22 @@
     @apply size-3.75 rounded-full border-2 border-(--border-2);
     border-top-color: var(--primary);
     animation: nx-spin 0.7s linear infinite;
+  }
+
+  /* ── Auth-required full-screen layout ───────────────────────────────────── */
+
+  .ar-bg {
+    @apply min-h-screen flex flex-col items-center justify-center py-10 px-5;
+    background: radial-gradient(
+      120% 80% at 50% -10%,
+      color-mix(in oklab, var(--primary) 13%, var(--bg-0)),
+      var(--bg-0) 58%
+    );
+  }
+
+  .ar-card {
+    @apply w-full max-w-[400px] bg-(--bg-1) border border-border rounded-(--r-xl) text-center py-10 px-9;
+    box-shadow: var(--shadow-pop);
   }
 
   /* ── Verify-email full-screen layout ─────────────────────────────────────── */
