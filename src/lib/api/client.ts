@@ -8,25 +8,16 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
-// Request interceptor
-apiClient.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
 // Response interceptor
 let isRefreshing = false;
 let failedQueue: Array<{
-  resolve: (token: string) => void;
+  resolve: () => void;
   reject: (error: unknown) => void;
 }> = [];
 
-const processQueue = (error: unknown, token: string | null) => {
+const processQueue = (error: unknown) => {
   failedQueue.forEach((prom) => {
-    error ? prom.reject(error) : prom.resolve(token!);
+    error ? prom.reject(error) : prom.resolve();
   });
   failedQueue = [];
 };
@@ -50,34 +41,26 @@ apiClient.interceptors.response.use(
     ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers!.Authorization = `Bearer ${token}`;
-            return apiClient(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
+          failedQueue.push({
+            resolve: () => resolve(apiClient(originalRequest)),
+            reject,
+          });
+        });
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        // Cookie automatically send
-        const { data } = await axios.post(
+        await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/token/refresh/`,
           {},
           { withCredentials: true },
         );
-
-        const newAccessToken = data.data.access;
-        useAuthStore.getState().setAccessToken(newAccessToken);
-        processQueue(null, newAccessToken);
-
-        originalRequest.headers!.Authorization = `Bearer ${newAccessToken}`;
+        processQueue(null);
         return apiClient(originalRequest);
       } catch (refreshError) {
-        processQueue(refreshError, null);
+        processQueue(refreshError);
         useAuthStore.getState().clearAuth();
         clearSessionCookie();
         window.location.href = "/login";

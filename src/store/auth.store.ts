@@ -1,25 +1,28 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { User } from "@/types/user";
 
 interface AuthState {
   user: User | null;
-  accessToken: string | null;
   isAuthenticated: boolean;
-  setAuth: (user: User, accessToken: string) => void;
-  setAccessToken: (accessToken: string) => void;
+  setAuth: (user: User) => void;
   clearAuth: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  accessToken: null,
-  isAuthenticated: false,
-
-  setAuth: (user, accessToken) =>
-    set({ user, accessToken, isAuthenticated: true }),
-
-  setAccessToken: (accessToken) => set({ accessToken }),
-
-  clearAuth: () =>
-    set({ user: null, accessToken: null, isAuthenticated: false }),
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
+      setAuth: (user) => set({ user, isAuthenticated: true }),
+      clearAuth: () => set({ user: null, isAuthenticated: false }),
+    }),
+    {
+      name: "nx-auth",
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
+);

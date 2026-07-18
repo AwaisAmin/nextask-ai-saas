@@ -32,7 +32,7 @@ export const useLogin = () => {
     onSuccess: ({ data: res }) => {
       if (!res.success) return;
 
-      const { user, tokens } = res.data;
+      const { user } = res.data;
 
       if (!user.is_verified) {
         toast.warning("Please verify your email before signing in.", {
@@ -43,7 +43,7 @@ export const useLogin = () => {
         return;
       }
 
-      setAuth(user, tokens.access_token);
+      setAuth(user);
       setSessionCookie();
       const next = searchParams.get("next");
       router.push(next ?? "/dashboard");
@@ -101,8 +101,8 @@ export const useSocialAuth = () => {
     }) => socialAuthApi(provider, code, redirectUri),
     onSuccess: ({ data: res }) => {
       if (!res.success) return;
-      const { user, tokens } = res.data;
-      setAuth(user, tokens.access_token);
+      const { user } = res.data;
+      setAuth(user);
       setSessionCookie();
       router.push("/dashboard");
     },

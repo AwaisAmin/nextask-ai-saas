@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { InviteSkeleton } from "@/components/loaders/InviteSkeleton";
 import { cn } from "@/lib/utils";
-import { useAuthStore } from "@/store/auth.store";
 import { getApiErrorStatus, handleApiError } from "@/lib/api/handle-error";
 import {
   INVITE_ACCEPT_LABEL,
@@ -32,12 +31,9 @@ import {
   INVITE_HEADING_POST,
   INVITE_HEADING_PRE,
   INVITE_INVITER_SUFFIX,
-  INVITE_LOGIN_HINT,
-  INVITE_LOGIN_LABEL,
   INVITE_PAGE_BRAND,
   INVITE_PAGE_HEADING,
   INVITE_ROLE_CLASS,
-  INVITE_SIGNUP_LABEL,
   INVITE_SUCCESS_BODY,
   INVITE_SUCCESS_CTA,
   INVITE_SUCCESS_HEADING,
@@ -49,7 +45,6 @@ import { StatusCard } from "./StatusCard";
 
 export const InviteAcceptClient = ({ token }: { token: string }) => {
   const router = useRouter();
-  const { isAuthenticated } = useAuthStore();
 
   const { data: invite, isLoading, isError, error } = useInviteDetails(token);
   const acceptMutation = useAcceptInvite();
@@ -204,68 +199,30 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
               </div>
             )}
 
-            {/* Logged-in: Decline + Accept side by side */}
-            {isAuthenticated && (
-              <>
-                <div className="flex gap-2.5">
-                  <Button
-                    variant="ghost"
-                    className="flex-1 py-3.5 text-[15px] font-semibold bg-transparent text-(--text-1) hover:bg-(--bg-2) hover:text-(--text-0)"
-                    onClick={handleDecline}
-                    disabled={
-                      acceptMutation.isPending || declineMutation.isPending
-                    }
-                  >
-                    {INVITE_DECLINE_LABEL}
-                  </Button>
-                  <Button
-                    variant="primary"
-                    className="flex-1 py-3.5 text-[15px] font-semibold"
-                    onClick={handleAccept}
-                    disabled={
-                      acceptMutation.isPending || declineMutation.isPending
-                    }
-                  >
-                    {acceptMutation.isPending
-                      ? INVITE_ACCEPTING_LABEL
-                      : INVITE_ACCEPT_LABEL}
-                  </Button>
-                </div>
-                <div className="flex items-center justify-center gap-1.5 mt-5 pt-5 border-t border-border text-[12px] text-(--text-3)">
-                  <Clock size={13} className="shrink-0" />
-                  {INVITE_EXPIRY_PRE} {expiryDays} {INVITE_EXPIRY_DAYS}
-                </div>
-              </>
-            )}
-
-            {/* Guest: create account or sign in */}
-            {!isAuthenticated && (
-              <div className="space-y-3">
-                <Button
-                  asChild
-                  variant="primary"
-                  className="w-full py-3.5 text-[15px] font-semibold"
-                >
-                  <Link href={`/register?invite=${token}`}>
-                    {INVITE_SIGNUP_LABEL}
-                  </Link>
-                </Button>
-                <div className="flex items-center gap-2 pt-0.5">
-                  <div className="flex-1 h-px bg-border" />
-                  <span className="text-[11.5px] text-(--text-3)">or</span>
-                  <div className="flex-1 h-px bg-border" />
-                </div>
-                <p className="text-[12.5px] text-(--text-2)">
-                  {INVITE_LOGIN_HINT}{" "}
-                  <Link
-                    href={`/login?invite=${token}`}
-                    className="text-(--primary) font-semibold hover:underline"
-                  >
-                    {INVITE_LOGIN_LABEL}
-                  </Link>
-                </p>
-              </div>
-            )}
+            <div className="flex gap-2.5">
+              <Button
+                variant="ghost"
+                className="flex-1 py-3.5 text-[15px] font-semibold bg-transparent text-(--text-1) hover:bg-(--bg-2) hover:text-(--text-0)"
+                onClick={handleDecline}
+                disabled={acceptMutation.isPending || declineMutation.isPending}
+              >
+                {INVITE_DECLINE_LABEL}
+              </Button>
+              <Button
+                variant="primary"
+                className="flex-1 py-3.5 text-[15px] font-semibold"
+                onClick={handleAccept}
+                disabled={acceptMutation.isPending || declineMutation.isPending}
+              >
+                {acceptMutation.isPending
+                  ? INVITE_ACCEPTING_LABEL
+                  : INVITE_ACCEPT_LABEL}
+              </Button>
+            </div>
+            <div className="flex items-center justify-center gap-1.5 mt-5 pt-5 border-t border-border text-[12px] text-(--text-3)">
+              <Clock size={13} className="shrink-0" />
+              {INVITE_EXPIRY_PRE} {expiryDays} {INVITE_EXPIRY_DAYS}
+            </div>
           </>
         )}
       </div>

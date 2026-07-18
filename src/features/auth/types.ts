@@ -3,9 +3,6 @@ import type { PasswordResetConfirmInput } from "./schemas";
 
 export type AuthData = {
   user: User;
-  tokens: {
-    access_token: string;
-  };
 };
 
 export type BadgeVariant = "ok" | "warn" | "ai";
