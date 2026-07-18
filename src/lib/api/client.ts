@@ -8,6 +8,18 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
+// Request interceptor — CSRF token for state-changing requests
+apiClient.interceptors.request.use((config) => {
+  const csrf = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrftoken="))
+    ?.split("=")[1];
+
+  if (csrf) config.headers["X-CSRFToken"] = csrf;
+
+  return config;
+});
+
 // Response interceptor
 let isRefreshing = false;
 let failedQueue: Array<{
