@@ -10,13 +10,12 @@ export const getInviteDetails = async (
   return data.data;
 };
 
-export const acceptInvite = async (
+export const respondToInvite = async (
   token: string,
-): Promise<{ slug: string }> => {
-  const { data } = await apiClient.post(`/api/v1/invitations/${token}/accept/`);
-  return data.data;
-};
-
-export const declineInvite = async (token: string): Promise<void> => {
-  await apiClient.post(`/api/v1/invitations/${token}/decline/`);
+  action: "accept" | "decline",
+): Promise<void> => {
+  await apiClient.post("/api/v1/organizations/invite/respond/", {
+    token,
+    action,
+  });
 };

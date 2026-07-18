@@ -57,8 +57,8 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
 
   const handleAccept = async () => {
     try {
-      const result = await acceptMutation.mutateAsync(token);
-      router.push(`/${result.slug}`);
+      await acceptMutation.mutateAsync(token);
+      router.push(`/${invite!.org_slug}`);
     } catch (err) {
       handleApiError(err);
     }
