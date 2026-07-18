@@ -8,19 +8,11 @@ export type InviteStatus =
   | "error";
 
 export type InviteDetails = {
-  token: string;
-  org: {
-    name: string;
-    slug: string;
-    accent: string;
-  };
-  inviter: {
-    name: string;
-    avatar: string | null;
-  };
+  email: string;
   role: string;
-  expiresAt: string;
-  email?: string;
+  org_name: string;
+  org_slug: string;
+  inviter_name: string;
 };
 
 export type AcceptInvitePayload = {

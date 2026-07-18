@@ -79,7 +79,7 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
     }
   };
 
-  const expiryDays = getExpiryDays(invite?.expiresAt);
+  const expiryDays = getExpiryDays();
   const roleBadgeClass =
     INVITE_ROLE_CLASS[invite?.role ?? ""] ?? INVITE_ROLE_CLASS["viewer"];
 
@@ -149,9 +149,9 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
             icon={<CheckCircle2 size={30} className="text-(--ok)" />}
             badgeClassName="inv-ok-badge"
             heading={INVITE_SUCCESS_HEADING}
-            body={`${INVITE_SUCCESS_BODY} ${invite.org.name}.`}
+            body={`${INVITE_SUCCESS_BODY} ${invite.org_name}.`}
             cta={INVITE_SUCCESS_CTA}
-            href={`/${invite.org.slug}`}
+            href={`/${invite.org_slug}`}
           />
         )}
 
@@ -159,11 +159,7 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
           <>
             {/* Org avatar */}
             <div className="flex justify-center mb-5">
-              <OrgAvatar
-                name={invite.org.name}
-                accent={invite.org.accent}
-                shadow
-              />
+              <OrgAvatar name={invite.org_name} shadow />
             </div>
 
             {/* Eyebrow */}
@@ -174,14 +170,14 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
             {/* Heading */}
             <h1 className="[font-family:var(--font-display)] text-[24px] font-semibold tracking-[-0.02em] leading-[1.3] text-(--text-0) mb-1.5">
               {INVITE_HEADING_PRE}{" "}
-              <b className="text-(--primary)">{invite.org.name}</b>{" "}
+              <b className="text-(--primary)">{invite.org_name}</b>{" "}
               {INVITE_HEADING_POST}
             </h1>
 
             {/* Inviter line */}
             <p className="text-[14.5px] text-(--text-1) leading-[1.55] mb-1.5">
               <b className="font-semibold text-(--text-0)">
-                {invite.inviter.name}
+                {invite.inviter_name}
               </b>{" "}
               {INVITE_INVITER_SUFFIX}
             </p>

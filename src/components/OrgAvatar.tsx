@@ -2,7 +2,7 @@ import { toInitials } from "@/lib/format";
 
 type Props = {
   name: string;
-  accent: string;
+  accent?: string;
   size?: number;
   radius?: number;
   shadow?: boolean;
@@ -10,7 +10,7 @@ type Props = {
 
 export const OrgAvatar = ({
   name,
-  accent,
+  accent = "var(--primary)",
   size = 64,
   radius = 18,
   shadow = false,

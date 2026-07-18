@@ -4,7 +4,9 @@ import type { InviteDetails } from "../types";
 export const getInviteDetails = async (
   token: string,
 ): Promise<InviteDetails> => {
-  const { data } = await apiClient.get(`/api/v1/invitations/${token}/`);
+  const { data } = await apiClient.get(
+    `/api/v1/organizations/invite/preview/?token=${token}`,
+  );
   return data.data;
 };
 
