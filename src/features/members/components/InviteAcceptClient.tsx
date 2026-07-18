@@ -11,8 +11,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InviteSkeleton } from "@/components/loaders/InviteSkeleton";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth.store";
-import { handleApiError } from "@/lib/api/handle-error";
+import { getApiErrorStatus, handleApiError } from "@/lib/api/handle-error";
 import {
   INVITE_ACCEPT_LABEL,
   INVITE_ACCEPTING_LABEL,
@@ -35,28 +36,16 @@ import {
   INVITE_LOGIN_LABEL,
   INVITE_PAGE_BRAND,
   INVITE_PAGE_HEADING,
+  INVITE_ROLE_CLASS,
   INVITE_SIGNUP_LABEL,
   INVITE_SUCCESS_BODY,
   INVITE_SUCCESS_CTA,
   INVITE_SUCCESS_HEADING,
 } from "@/constants/members";
 import { useAcceptInvite, useDeclineInvite, useInviteDetails } from "../hooks";
-import { OrgAvatar } from "./OrgAvatar";
+import { getExpiryDays } from "../utils";
+import { OrgAvatar } from "@/components/OrgAvatar";
 import { StatusCard } from "./StatusCard";
-
-const ROLE_CLASS: Record<string, string> = {
-  admin: "inv-role-admin",
-  member: "inv-role-member",
-  viewer: "inv-role-viewer",
-};
-
-const getExpiryDays = (expiresAt?: string) => {
-  if (!expiresAt) return 7;
-  return Math.max(
-    1,
-    Math.ceil((new Date(expiresAt).getTime() - Date.now()) / 86_400_000),
-  );
-};
 
 export const InviteAcceptClient = ({ token }: { token: string }) => {
   const router = useRouter();
@@ -66,8 +55,7 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
   const acceptMutation = useAcceptInvite();
   const declineMutation = useDeclineInvite();
 
-  const httpStatus = (error as { response?: { status?: number } })?.response
-    ?.status;
+  const httpStatus = getApiErrorStatus(error);
   const isExpired = isError && httpStatus === 410;
   const isAlreadyMember = isError && httpStatus === 409;
   const isUnknownError = isError && !isExpired && !isAlreadyMember;
@@ -84,13 +72,16 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
   const handleDecline = async () => {
     try {
       await declineMutation.mutateAsync(token);
+    } catch (err) {
+      handleApiError(err);
     } finally {
       router.push("/");
     }
   };
 
   const expiryDays = getExpiryDays(invite?.expiresAt);
-  const roleBadgeClass = ROLE_CLASS[invite?.role ?? ""] ?? "inv-role-viewer";
+  const roleBadgeClass =
+    INVITE_ROLE_CLASS[invite?.role ?? ""] ?? INVITE_ROLE_CLASS["viewer"];
 
   return (
     <div className="inv-bg min-h-screen flex flex-col items-center justify-center py-10 px-5">
@@ -106,10 +97,7 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
       </Link>
 
       {/* Card */}
-      <div
-        className="w-full max-w-[440px] bg-(--bg-1) border border-border rounded-(--r-xl) text-center"
-        style={{ boxShadow: "var(--shadow-pop)", padding: "40px 36px" }}
-      >
+      <div className="inv-card w-full max-w-[440px] bg-(--bg-1) border border-border rounded-(--r-xl) text-center py-10 px-9">
         {isLoading && <InviteSkeleton />}
 
         {!token && !isLoading && (
@@ -171,7 +159,11 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
           <>
             {/* Org avatar */}
             <div className="flex justify-center mb-5">
-              <OrgAvatar name={invite.org.name} accent={invite.org.accent} />
+              <OrgAvatar
+                name={invite.org.name}
+                accent={invite.org.accent}
+                shadow
+              />
             </div>
 
             {/* Eyebrow */}
@@ -197,7 +189,10 @@ export const InviteAcceptClient = ({ token }: { token: string }) => {
             {/* Role badge */}
             <div className="mb-6 mt-1.5">
               <span
-                className={`inline-flex items-center gap-1.5 text-[12px] font-bold tracking-[.02em] px-3 py-1 rounded-full ${roleBadgeClass}`}
+                className={cn(
+                  "inline-flex items-center gap-1.5 text-[12px] font-bold tracking-[.02em] px-3 py-1 rounded-full",
+                  roleBadgeClass,
+                )}
               >
                 {invite.role}
               </span>

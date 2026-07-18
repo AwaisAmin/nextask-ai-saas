@@ -38,3 +38,9 @@ export const INVITE_ERROR_CTA = "Back to homepage";
 export const INVITE_SUCCESS_HEADING = "Welcome aboard!";
 export const INVITE_SUCCESS_BODY = "You've joined";
 export const INVITE_SUCCESS_CTA = "Open workspace";
+
+export const INVITE_ROLE_CLASS: Record<string, string> = {
+  admin: "inv-role-admin",
+  member: "inv-role-member",
+  viewer: "inv-role-viewer",
+};

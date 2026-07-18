@@ -1,44 +1,52 @@
-.inv-bg {
-  background: radial-gradient(
-    120% 80% at 50% -10%,
-    color-mix(in oklab, var(--primary) 13%, var(--bg-0)),
-    var(--bg-0) 58%
-  );
-}
+@layer components {
+  .inv-bg {
+    background: radial-gradient(
+      120% 80% at 50% -10%,
+      color-mix(in oklab, var(--primary) 13%, var(--bg-0)),
+      var(--bg-0) 58%
+    );
+  }
 
-.inv-mark {
-  background: linear-gradient(
-    145deg,
-    var(--primary),
-    color-mix(in oklab, var(--primary) 50%, #000)
-  );
-  box-shadow: 0 4px 14px -4px var(--primary);
-}
+  .inv-mark {
+    background: linear-gradient(
+      145deg,
+      var(--primary),
+      color-mix(in oklab, var(--primary) 50%, #000)
+    );
+    box-shadow: 0 4px 14px -4px var(--primary);
+  }
 
-.inv-role-member {
-  color: var(--info);
-  background: color-mix(in oklab, var(--info) 15%, transparent);
-}
-.inv-role-admin {
-  color: var(--primary);
-  background: var(--primary-soft);
-}
-.inv-role-viewer {
-  color: var(--text-2);
-  background: var(--bg-3);
-}
+  .inv-card {
+    box-shadow: var(--shadow-pop);
+  }
 
-.inv-err-badge {
-  background: color-mix(in oklab, var(--danger) 14%, transparent);
-  border: 1px solid color-mix(in oklab, var(--danger) 30%, transparent);
-}
+  .inv-role-member {
+    color: var(--info);
+    background: color-mix(in oklab, var(--info) 15%, transparent);
+  }
 
-.inv-already-badge {
-  background: color-mix(in oklab, var(--primary) 14%, transparent);
-  border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent);
-}
+  .inv-role-admin {
+    color: var(--primary);
+    background: var(--primary-soft);
+  }
 
-.inv-ok-badge {
-  background: color-mix(in oklab, var(--ok) 14%, transparent);
-  border: 1px solid color-mix(in oklab, var(--ok) 30%, transparent);
+  .inv-role-viewer {
+    color: var(--text-2);
+    background: var(--bg-3);
+  }
+
+  .inv-err-badge {
+    background: color-mix(in oklab, var(--danger) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--danger) 30%, transparent);
+  }
+
+  .inv-already-badge {
+    background: color-mix(in oklab, var(--primary) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent);
+  }
+
+  .inv-ok-badge {
+    background: color-mix(in oklab, var(--ok) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--ok) 30%, transparent);
+  }
 }

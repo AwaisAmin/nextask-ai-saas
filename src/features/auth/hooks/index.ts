@@ -6,6 +6,7 @@ import { setSessionCookie } from "@/lib/session";
 import { setPendingEmail } from "@/lib/pending-email";
 import {
   loginApi,
+  logoutApi,
   registerApi,
   verifyEmailApi,
   requestPasswordResetApi,
@@ -104,6 +105,19 @@ export const useSocialAuth = () => {
       setAuth(user, tokens.access_token);
       setSessionCookie();
       router.push("/dashboard");
+    },
+  });
+};
+
+export const useLogout = () => {
+  const router = useRouter();
+  const clearAuth = useAuthStore((s) => s.clearAuth);
+
+  return useMutation({
+    mutationFn: () => logoutApi(),
+    onSettled: () => {
+      clearAuth();
+      router.push("/login");
     },
   });
 };

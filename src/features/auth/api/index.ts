@@ -32,6 +32,9 @@ export const resendVerificationApi = (email: string) =>
     email,
   });
 
+export const logoutApi = () =>
+  apiClient.post<ApiResponse<null>>("/api/v1/auth/logout/");
+
 export const socialAuthApi = (
   provider: SocialProvider,
   code: string,

@@ -6,6 +6,7 @@ export interface Organization {
   name: string;
   slug: string;
   plan: PlanType;
+  accent: string;
   created_at: string;
 }
 
