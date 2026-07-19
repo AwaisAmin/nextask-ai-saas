@@ -49,4 +49,9 @@
     background: color-mix(in oklab, var(--ok) 14%, transparent);
     border: 1px solid color-mix(in oklab, var(--ok) 30%, transparent);
   }
+
+  .inv-warn-badge {
+    background: color-mix(in oklab, var(--warn) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--warn) 30%, transparent);
+  }
 }

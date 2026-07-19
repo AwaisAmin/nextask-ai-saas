@@ -1,3 +1,29 @@
+export const AUTH_FORM = {
+  fields: {
+    name: { label: "Full name", placeholder: "Your name" },
+    email: { label: "Work email", placeholder: "you@company.com" },
+    password: { label: "Password", placeholder: "••••••••" },
+  },
+  oauth: {
+    google: "Continue with Google",
+    github: "Continue with GitHub",
+    divider: "or with email",
+  },
+  forgotPassword: { label: "Forgot password?", href: "/password-reset" },
+} as const;
+
+export const AUTH_REQUIRED_CONTENT = {
+  unauthorized: {
+    heading: "Not authorized",
+    body: "You don't have permission to access this page.",
+  },
+  unauthenticated: {
+    heading: "Sign in to continue",
+    body: "You need to be signed in to access this page.",
+    cta: "Sign in",
+  },
+} as const;
+
 export const AUTH_CONTENT = {
   signin: {
     title: "Welcome back",
@@ -52,6 +78,15 @@ export const AUTH_LEFT_TAG = {
     quote:
       "A few seconds now keeps your team's work safe. Pick something only you would know.",
   },
+} as const;
+
+export const AUTH_TOASTS = {
+  unverifiedEmail: {
+    message: "Please verify your email before signing in.",
+    description: (email: string) =>
+      `We sent a link to ${email}. Check your inbox.`,
+  },
+  passwordUpdated: "Password updated! Please sign in.",
 } as const;
 
 export const PASSWORD_RESET_CONTENT = {

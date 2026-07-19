@@ -1,9 +1,15 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth.store";
 import { setSessionCookie } from "@/lib/session";
 import { setPendingEmail } from "@/lib/pending-email";
+import {
+  getPendingRedirect,
+  clearPendingRedirect,
+} from "@/lib/pending-redirect";
+import { ROUTES } from "@/constants/routes";
+import { AUTH_TOASTS } from "@/constants/auth";
 import {
   loginApi,
   logoutApi,
@@ -24,7 +30,6 @@ import type {
 
 export const useLogin = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const setAuth = useAuthStore((s) => s.setAuth);
 
   return useMutation({
@@ -35,18 +40,19 @@ export const useLogin = () => {
       const { user } = res.data;
 
       if (!user.is_verified) {
-        toast.warning("Please verify your email before signing in.", {
-          description: `We sent a link to ${user.email}. Check your inbox.`,
-        });
+        const { message, description } = AUTH_TOASTS.unverifiedEmail;
+        toast.warning(message, { description: description(user.email) });
         setPendingEmail(user.email);
-        router.push("/verify-email");
+        router.push(ROUTES.verifyEmail);
         return;
       }
 
       setAuth(user);
       setSessionCookie();
-      const next = searchParams.get("next");
-      router.push(next ?? "/dashboard");
+      const next = new URLSearchParams(window.location.search).get("next");
+      const redirect = getPendingRedirect() ?? next;
+      clearPendingRedirect();
+      router.push(redirect ?? ROUTES.dashboard);
     },
   });
 };
@@ -59,7 +65,7 @@ export const useRegister = () => {
     onSuccess: ({ data: res }, variables) => {
       if (res.success) {
         setPendingEmail(variables.email);
-        router.push("/verify-email");
+        router.push(ROUTES.verifyEmail);
       }
     },
   });
@@ -104,7 +110,9 @@ export const useSocialAuth = () => {
       const { user } = res.data;
       setAuth(user);
       setSessionCookie();
-      router.push("/dashboard");
+      const redirect = getPendingRedirect();
+      clearPendingRedirect();
+      router.push(redirect ?? ROUTES.dashboard);
     },
   });
 };
@@ -117,7 +125,7 @@ export const useLogout = () => {
     mutationFn: () => logoutApi(),
     onSettled: () => {
       clearAuth();
-      router.push("/login");
+      router.push(ROUTES.login);
     },
   });
 };
@@ -130,8 +138,8 @@ export const useConfirmPasswordReset = () => {
       confirmPasswordResetApi(data),
     onSuccess: ({ data: res }) => {
       if (res.success) {
-        toast.success("Password updated! Please sign in.");
-        router.push("/login");
+        toast.success(AUTH_TOASTS.passwordUpdated);
+        router.push(ROUTES.login);
       }
     },
   });

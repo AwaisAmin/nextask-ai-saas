@@ -1,15 +1,22 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 type Props = {
-  icon: React.ReactNode;
+  icon: ReactNode;
   badgeClassName: string;
   heading: string;
   body: string;
   cta: string;
-  href: string;
-};
+} & (
+  | { href: string; onClick?: never; isLoading?: never }
+  | { onClick: () => void; isLoading?: boolean; href?: never }
+);
+
+const LINK_CLS =
+  "inline-flex items-center gap-2 text-[14px] font-semibold text-(--primary) hover:underline";
 
 export const StatusCard = ({
   icon,
@@ -18,6 +25,8 @@ export const StatusCard = ({
   body,
   cta,
   href,
+  onClick,
+  isLoading,
 }: Props) => (
   <div className="text-center">
     <div
@@ -32,12 +41,24 @@ export const StatusCard = ({
       {heading}
     </h2>
     <p className="text-[14px] text-(--text-2) leading-[1.55] mb-7">{body}</p>
-    <Link
-      href={href}
-      className="inline-flex items-center gap-2 text-[14px] font-semibold text-(--primary) hover:underline"
-    >
-      <ChevronLeft size={15} />
-      {cta}
-    </Link>
+    {href ? (
+      <Link href={href} className={LINK_CLS}>
+        <ChevronLeft size={15} />
+        {cta}
+      </Link>
+    ) : (
+      <Button
+        variant="ghost"
+        className={cn(
+          LINK_CLS,
+          "h-auto p-0 hover:bg-transparent disabled:opacity-50",
+        )}
+        onClick={onClick}
+        disabled={isLoading}
+      >
+        <ChevronLeft size={15} />
+        {cta}
+      </Button>
+    )}
   </div>
 );

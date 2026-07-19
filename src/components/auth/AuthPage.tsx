@@ -1,17 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GitHubIcon, GoogleIcon } from "@/icons";
-import { AUTH_CONTENT } from "@/constants/auth";
+import { AUTH_CONTENT, AUTH_FORM } from "@/constants/auth";
 import { handleApiError } from "@/lib/api/handle-error";
 import { loginSchema, registerSchema } from "@/features/auth/schemas";
 import type { LoginInput, RegisterInput } from "@/features/auth/schemas";
 import { useLogin, useRegister } from "@/features/auth/hooks";
+import { setPendingRedirect } from "@/lib/pending-redirect";
 import { AuthLeft } from "./AuthLeft";
 import { AuthLoader } from "@/components/loaders/AuthLoader";
 import { PasswordStrength } from "@/features/auth/components/PasswordStrength";
@@ -21,6 +22,7 @@ import type { AuthMode, AuthFormValues } from "./types";
 export const AuthPage = ({ mode }: { mode: AuthMode }) => {
   const isSignup = mode === "signup";
   const content = AUTH_CONTENT[mode];
+  const { fields, oauth, forgotPassword } = AUTH_FORM;
 
   const {
     register,
@@ -37,6 +39,12 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
   const loginMutation = useLogin();
   const registerMutation = useRegister();
   const [isNavigating, setIsNavigating] = useState(false);
+
+  useEffect(() => {
+    const next = new URLSearchParams(window.location.search).get("next");
+    if (next) setPendingRedirect(next);
+  }, []);
+
   const isPending = loginMutation.isPending || registerMutation.isPending;
 
   const onSubmit = async (values: AuthFormValues) => {
@@ -46,7 +54,6 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
       } else {
         await loginMutation.mutateAsync(values as LoginInput);
       }
-
       setIsNavigating(true);
     } catch (err) {
       handleApiError(err, setError);
@@ -72,7 +79,7 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
                 onClick={() => (window.location.href = getGoogleOAuthUrl())}
               >
                 <GoogleIcon size={17} />
-                Continue with Google
+                {oauth.google}
               </Button>
               <Button
                 variant="secondary"
@@ -80,18 +87,18 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
                 onClick={() => (window.location.href = getGitHubOAuthUrl())}
               >
                 <GitHubIcon size={17} />
-                Continue with GitHub
+                {oauth.github}
               </Button>
             </div>
 
-            <div className="auth-divider">or with email</div>
+            <div className="auth-divider">{oauth.divider}</div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
               {isSignup && (
                 <Input
-                  label="Full name"
+                  label={fields.name.label}
                   type="text"
-                  placeholder="Your name"
+                  placeholder={fields.name.placeholder}
                   autoComplete="name"
                   capitalize
                   error={errors.full_name?.message}
@@ -99,17 +106,17 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
                 />
               )}
               <Input
-                label="Work email"
+                label={fields.email.label}
                 type="email"
-                placeholder="you@company.com"
+                placeholder={fields.email.placeholder}
                 autoComplete="email"
                 error={errors.email?.message}
                 {...register("email")}
               />
               <Input
-                label="Password"
+                label={fields.password.label}
                 type="password"
-                placeholder="••••••••"
+                placeholder={fields.password.placeholder}
                 autoComplete={isSignup ? "new-password" : "current-password"}
                 error={errors.password?.message}
                 {...register("password")}
@@ -118,10 +125,10 @@ export const AuthPage = ({ mode }: { mode: AuthMode }) => {
               {!isSignup && (
                 <div className="flex justify-end -mt-2 mb-3">
                   <Link
-                    href="/password-reset"
+                    href={forgotPassword.href}
                     className="text-[12.5px] font-semibold tracking-[0.012em] text-(--primary) hover:opacity-75 transition-opacity duration-200"
                   >
-                    Forgot password?
+                    {forgotPassword.label}
                   </Link>
                 </div>
               )}
