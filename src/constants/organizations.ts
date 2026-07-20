@@ -21,10 +21,8 @@ export const ORG_SECTION_ALL_PREFIX = "ALL WORKSPACES ·";
 export const ORG_BADGE_INVITED = "Invited";
 export const ORG_DETAIL_PENDING = "Invited to join ·";
 export const ORG_MEMBERS_SUFFIX = "members";
-export const ORG_DOT_SEP = "·";
 
-export const ORG_ACCEPT_BTN = "Accept";
-export const ORG_ACCEPTING_BTN = "Joining…";
+export const ORG_VIEW_INVITE_BTN = "View invite";
 
 export const ORG_CREATE_TITLE = "Create a new organization";
 export const ORG_CREATE_SUB = "Start a fresh workspace for another team";
@@ -35,11 +33,14 @@ export const ORG_EMPTY_NO_MATCH = "No workspaces match your search.";
 export const ORG_EMPTY_DEFAULT =
   "No workspaces yet. Create your first one below.";
 
+export const ORG_LOAD_ERROR =
+  "Couldn't load your workspaces. Please refresh the page.";
+
 export const ORG_PLAN_LABELS: Record<string, string> = {
-  FREE: "Free",
-  PRO: "Pro",
-  BUSINESS: "Business",
-  ENTERPRISE: "Enterprise",
+  free: "Free",
+  pro: "Pro",
+  business: "Business",
+  enterprise: "Enterprise",
 };
 
 export const ORG_ROLE_LABELS: Record<string, string> = {

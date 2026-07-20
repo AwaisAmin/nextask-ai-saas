@@ -38,9 +38,7 @@ export const OrgSearch = ({ value, onChange }: Props) => {
         onKeyDown={(e) => e.key === "Escape" && onChange("")}
         className="org-search-input pl-[42px] pr-[38px] py-[11px]"
       />
-      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-(--text-3) bg-(--bg-3) border border-(--border-2) px-[5px] py-[2px] rounded-[5px] pointer-events-none select-none z-10">
-        /
-      </span>
+      <span className="org-search-kbd">/</span>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { Dropdown } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/auth.store";
 import { useLogout } from "@/features/auth/hooks";
+import { AUTH_LABELS } from "@/constants/auth";
 import { toInitials } from "@/lib/format";
 
 export const OrgTopbar = () => {
@@ -46,7 +47,9 @@ export const OrgTopbar = () => {
           className="org-logout-btn w-full h-auto justify-start border-0 bg-transparent text-[13.5px] text-(--danger) rounded-lg px-[10px] py-[9px] gap-2.5 hover:text-(--danger)"
         >
           <LogOut size={15} />
-          {logoutMutation.isPending ? "Signing out…" : "Log out"}
+          {logoutMutation.isPending
+            ? AUTH_LABELS.loggingOut
+            : AUTH_LABELS.logout}
         </Button>
       </Dropdown>
     </header>

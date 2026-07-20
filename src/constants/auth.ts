@@ -80,6 +80,11 @@ export const AUTH_LEFT_TAG = {
   },
 } as const;
 
+export const AUTH_LABELS = {
+  logout: "Log out",
+  loggingOut: "Signing out…",
+} as const;
+
 export const AUTH_TOASTS = {
   unverifiedEmail: {
     message: "Please verify your email before signing in.",

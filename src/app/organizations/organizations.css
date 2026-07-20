@@ -16,13 +16,6 @@
 
   /* ── User button ─────────────────────────────────────────────────────────── */
 
-  .org-user-btn {
-    @apply flex items-center gap-[9px] px-[10px] py-1.5 pl-1.5 rounded-full transition-colors duration-130;
-    &:hover {
-      background: var(--bg-2);
-    }
-  }
-
   .org-user-avatar {
     @apply size-7 rounded-full grid place-items-center text-white font-semibold text-[12px] shrink-0 select-none;
     background: linear-gradient(
@@ -41,24 +34,6 @@
     animation: nx-pop 0.14s ease;
   }
 
-  .org-menu-item {
-    @apply flex items-center gap-2.5 w-full text-left px-[10px] py-[9px] rounded-lg text-[13.5px] text-(--text-1) transition-colors duration-130;
-
-    &:hover {
-      background: var(--bg-3);
-      color: var(--text-0);
-    }
-
-    &.danger {
-      @apply text-(--danger);
-
-      &:hover {
-        background: color-mix(in oklab, var(--danger) 12%, transparent);
-        color: var(--danger);
-      }
-    }
-  }
-
   /* ── Org item list ───────────────────────────────────────────────────────── */
 
   /* "Invited" badge pill inside org row */
@@ -75,11 +50,23 @@
     }
   }
 
-  /* Search input — custom focus ring */
+  /* Search input — placeholder + focus ring */
   .org-search-input {
+    &::placeholder {
+      color: var(--text-3);
+    }
     &:focus-visible {
       box-shadow: 0 0 0 3px var(--primary-soft);
     }
+  }
+
+  /* '/' shortcut chip in search bar */
+  .org-search-kbd {
+    @apply absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none select-none z-10;
+    @apply text-[11px] leading-none px-[6px] py-[3px] rounded-[6px];
+    @apply bg-(--bg-3) border border-(--border-2) text-(--text-1);
+    font-family: var(--font-mono);
+    box-shadow: 0 1px 0 var(--border);
   }
 
   /* Member avatar circle (box-shadow uses CSS var) */

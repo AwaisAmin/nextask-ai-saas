@@ -15,14 +15,14 @@ export const OrgFooter = () => (
       <span className="size-[38px] rounded-[11px] bg-(--bg-3) grid place-items-center text-(--primary) shrink-0">
         <Plus size={18} />
       </span>
-      <div className="text-left">
-        <div className="[font-family:var(--font-display)] text-[13.5px] font-semibold text-(--text-0)">
+      <span className="text-left">
+        <span className="block [font-family:var(--font-display)] text-[13.5px] font-semibold text-(--text-0)">
           {ORG_CREATE_TITLE}
-        </div>
-        <div className="text-[11.5px] text-(--text-3) mt-px">
+        </span>
+        <span className="block text-[11.5px] text-(--text-3) mt-px">
           {ORG_CREATE_SUB}
-        </div>
-      </div>
+        </span>
+      </span>
     </Button>
     <p className="mt-3 text-[12px] text-(--text-3) text-center">
       {ORG_FOOT_NOTE}

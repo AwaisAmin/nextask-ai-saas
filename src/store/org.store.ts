@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { Organization } from "@/types/org";
+import type { OrgListItem } from "@/features/organizations/types";
 
 interface OrgState {
-  activeOrg: Organization | null;
-  setActiveOrg: (org: Organization) => void;
+  activeOrg: OrgListItem | null;
+  setActiveOrg: (org: OrgListItem) => void;
   clearOrg: () => void;
 }
 

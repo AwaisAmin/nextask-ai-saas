@@ -1,12 +1,12 @@
 export type MemberRole = "owner" | "admin" | "member" | "viewer";
-export type PlanType = "FREE" | "PRO" | "BUSINESS" | "ENTERPRISE";
+export type PlanType = "free" | "pro" | "business" | "enterprise";
 
 export interface Organization {
   id: string;
   name: string;
   slug: string;
   plan: PlanType;
-  accent: string;
+  color: string;
   created_at: string;
 }
 
